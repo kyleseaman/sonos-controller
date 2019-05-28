@@ -15,7 +15,7 @@ const IndexPage = () => (
       <Image />
     </div>
     <Link to="/page-2/">Go to page 2</Link><br/>
-    <Link to="/.netlify/functions/auth">LOGIN</Link>
+    <a href="/.netlify/functions/auth">LOGIN</a>
   </Layout>
 );
 
