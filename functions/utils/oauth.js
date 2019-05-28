@@ -1,7 +1,7 @@
 import simpleOauth from 'simple-oauth2';
 
 const sonosApi = 'https://api.sonos.com';
-const siteUrl = process.env.URL || 'http://localhost:3000';
+const siteUrl = process.env.URL || 'http://localhost:8000';
 
 export const config = {
   appId: process.env.SONOS_APP_ID,
@@ -11,7 +11,7 @@ export const config = {
   tokenPath: `${sonosApi}/login/v3/oauth/access`,
   authorizePath: `${sonosApi}/login/v3/oauth`,
   redirect_uri: `${siteUrl}/.netlify/functions/auth-callback`,
-}
+};
 
 function authInstance(credentials) {
   if (!credentials.client.id) {
@@ -33,5 +33,5 @@ export default authInstance({
     tokenHost: config.tokenHost,
     tokenPath: config.tokenPath,
     authorizePath: config.authorizePath,
-  }
-})
+  },
+});
