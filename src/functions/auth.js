@@ -7,6 +7,8 @@ exports.handler = (event, context, callback) => {
     state: 'none',
   });
 
+  console.log(authorizatoinURI);
+
   const response = {
     statusCode: 302,
     headers: {

@@ -46,6 +46,7 @@
     "start:lambda": "netlify-lambda serve src/functions",
     "build": "run-p build:**",
     "build:app": "gatsby build",
+    "build:lambda": "netlify-lambda build src/lambda",
     "format": "prettier --write src/**/*.{js,jsx}"
   },
   "repository": {
