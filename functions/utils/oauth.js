@@ -4,7 +4,6 @@ const sonosApi = 'https://api.sonos.com';
 const siteUrl = process.env.URL || 'http://localhost:8000';
 
 export const config = {
-  appId: process.env.SONOS_APP_ID,
   clientId: process.env.SONOS_CLIENT_ID,
   clientSecret: process.env.SONOS_CLIENT_SECRET,
   tokenHost: sonosApi,

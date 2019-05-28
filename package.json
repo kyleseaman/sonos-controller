@@ -16,6 +16,7 @@
     "gatsby-plugin-sharp": "^2.0.36",
     "gatsby-source-filesystem": "^2.0.33",
     "gatsby-transformer-sharp": "^2.1.19",
+    "netlify-lambda": "^1.4.13",
     "node-persist": "^3.0.4",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
