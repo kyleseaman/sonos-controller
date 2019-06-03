@@ -8,12 +8,9 @@ import SEO from '../components/seo';
 const SecondPage = props => (
   <Layout>
     <SEO title="Page two" />
-    <h1>Hi from the second page</h1>
     <p>{console.log(props)}</p>
-    <p>{props.location.pathname}</p>
     <p>{Buffer.from(queryString.parse(props.location.search).data, 'base64').toString('ascii')}</p>
     <p>{JSON.stringify(queryString.parse(props.location.search))}</p>
-    <p>Welcome to page 2</p>
     <Link to="/">Go back to the homepage</Link>
   </Layout>
 );
