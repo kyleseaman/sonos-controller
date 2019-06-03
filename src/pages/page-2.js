@@ -8,7 +8,7 @@ import SEO from '../components/seo';
 const parseURLToken = (props) => {
   const queryParams = queryString.parse(props.location.search);
   if (queryParams.data) {
-    return Buffer.from(queryParams.data, 'base64').toString('ascii');
+    // return Buffer.from(queryParams.data, 'base64').toString('ascii');
   }
   return 'no data';
 };
