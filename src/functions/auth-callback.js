@@ -1,7 +1,5 @@
 // import getUserData from './utils/getUserData';
-// import oauth2, { config } from './utils/oauth';
-const oauth2 = require('simple-oauth2');
-const config = require('./utils/oauth');
+import oauth2, { config } from './utils/oauth';
 
 exports.handler = (event, context, callback) => {
   const { code } = event.queryStringParameters;
