@@ -1,10 +1,7 @@
-import oauth2, { config } from './utils/oauth';
+// import oauth2, { config } from './utils/oauth';
 // const { config } = oauth2;
-
-// import simpleOauth from 'simple-oauth2';
-
-// // const oauth2 = require('./utils/oauth');
-
+import simpleOauth from 'simple-oauth2';
+import { config } from './utils/oauth';
 // const sonosApi = 'https://api.sonos.com';
 // const siteUrl = process.env.URL || 'http://localhost:8000';
 
@@ -17,28 +14,28 @@ import oauth2, { config } from './utils/oauth';
 //   redirect_uri: `${siteUrl}/.netlify/functions/auth-callback`,
 // };
 
-// function authInstance(credentials) {
-//   if (!credentials.client.id) {
-//     throw new Error('MISSING REQUIRED ENV VARS. Please set SONOS_CLIENT_ID');
-//   }
-//   if (!credentials.client.secret) {
-//     throw new Error('MISSING REQUIRED ENV VARS. Please set SONOS_CLIENT_SECRET');
-//   }
+function authInstance(credentials) {
+  if (!credentials.client.id) {
+    throw new Error('MISSING REQUIRED ENV VARS. Please set SONOS_CLIENT_ID');
+  }
+  if (!credentials.client.secret) {
+    throw new Error('MISSING REQUIRED ENV VARS. Please set SONOS_CLIENT_SECRET');
+  }
 
-//   return simpleOauth.create(credentials);
-// }
+  return simpleOauth.create(credentials);
+}
 
-// const oauth2 = authInstance({
-//   client: {
-//     id: config.clientId,
-//     secret: config.clientSecret,
-//   },
-//   auth: {
-//     tokenHost: config.tokenHost,
-//     tokenPath: config.tokenPath,
-//     authorizePath: config.authorizePath,
-//   },
-// });
+const oauth2 = authInstance({
+  client: {
+    id: config.clientId,
+    secret: config.clientSecret,
+  },
+  auth: {
+    tokenHost: config.tokenHost,
+    tokenPath: config.tokenPath,
+    authorizePath: config.authorizePath,
+  },
+});
 
 exports.handler = (event, context, callback) => {
   // console.log(JSON.stringify(oauth2));
