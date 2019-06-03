@@ -25,5 +25,3 @@ const SecondPage = props => (
 );
 
 export default SecondPage;
-
-// var obj = JSON.parse('{ "name":"John", "age":30, "city":"New York"}');
