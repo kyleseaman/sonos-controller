@@ -1,7 +1,8 @@
 // import oauth2, { config } from './utils/oauth';
 // const { config } = oauth2;
 import simpleOauth from 'simple-oauth2';
-import test from './utils/oauth';
+
+const getId = require('./utils/oauth');
 
 const sonosApi = 'https://api.sonos.com';
 const siteUrl = process.env.URL || 'http://localhost:8000';
@@ -43,7 +44,7 @@ exports.handler = (event, context, callback) => {
   // console.log(oauth2);
   // console.log(JSON.stringify(oauth2));
   // console.log(oauth2.authorizationCode);
-  console.log(test('kyle'));
+  console.log(getId('kyle'));
   // try {
   //   const authorizatoinURI = oauth2.authorizationCode.authorizeURL({
   //     redirect_uri: config.redirect_uri,
