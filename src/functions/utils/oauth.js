@@ -23,14 +23,17 @@ function authInstance(credentials) {
   return simpleOauth.create(credentials);
 }
 
-export default authInstance({
-  client: {
-    id: config.clientId,
-    secret: config.clientSecret,
-  },
-  auth: {
-    tokenHost: config.tokenHost,
-    tokenPath: config.tokenPath,
-    authorizePath: config.authorizePath,
-  },
-});
+// export default authInstance({
+//   client: {
+//     id: config.clientId,
+//     secret: config.clientSecret,
+//   },
+//   auth: {
+//     tokenHost: config.tokenHost,
+//     tokenPath: config.tokenPath,
+//     authorizePath: config.authorizePath,
+//   },
+// });
+export default function getId(foo) {
+  return `${foo}-bar!`;
+}
