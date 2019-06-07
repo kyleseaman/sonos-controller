@@ -1,4 +1,4 @@
-import { config, authInstance } from './helper/oauth';
+const { config, authInstance } = require('./helper/oauth');
 
 exports.handler = (event, context, callback) => {
   const authorizationURI = authInstance.authorizationCode.authorizeURL({
