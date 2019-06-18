@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Box, Grommet } from 'grommet';
 
 import { getUser } from '../utils/auth';
 import PlayerGroup from './playerGroup';
@@ -20,12 +21,17 @@ class HouseHold extends Component {
   render() {
     const { householdId } = this.props;
     return (
-      <div>
+      <Grommet>
         <div>{householdId}</div>
         <div>Groups</div>
-        {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-        {this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} />)}
-      </div>
+        <Box
+          direction='row'
+          wrap='true'
+        >
+          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
+          {this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} />)}
+        </Box>
+      </Grommet>
     );
   }
 

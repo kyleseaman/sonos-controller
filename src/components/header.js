@@ -1,34 +1,22 @@
 import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Heading } from 'grommet';
+
+import AppBar from './appBar';
 
 const Header = () => (
-  <header
-    style={{
-      background: 'rebeccapurple',
-      marginBottom: '1.45rem',
-    }}
-  >
-    <div
+  <AppBar>
+    <Link
+      to="/"
       style={{
-        margin: '0 auto',
-        maxWidth: 960,
-        padding: '1.45rem 1.0875rem',
+        color: 'white',
+        textDecoration: 'none',
       }}
     >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-          }}
-        >
-          Controller
-        </Link>
-      </h1>
-    </div>
-  </header>
+      <Heading level='3' margin='none'>Controller</Heading>
+    </Link>
+  </AppBar>
 );
 
 Header.propTypes = {

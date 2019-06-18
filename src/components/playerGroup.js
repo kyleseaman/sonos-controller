@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Box, Grommet } from 'grommet';
 
 import { getUser } from '../utils/auth';
 import GroupControl from './groupControl';
@@ -57,22 +58,29 @@ class PlayerGroup extends Component {
   render() {
     const { group } = this.props;
     return (
-      <div>
-        <hr />
-        <div>{group.name}</div>
-        <GroupMetadata groupId={group.id} />
-        <GroupVolume groupId={group.id} />
-        {/* {group.playbackState !== 'PLAYBACK_STATE_IDLE'
-          ? <GroupControl group={group} />
-          : <div>IDLE</div>
-        } */}
-        <GroupControl group={group} />
-        <button onClick={() => { this.modifyPlayerGroup(['RINCON_000E5878023001400'], []); }}>TEST ADD ANNEX</button>
-        <button onClick={() => { this.modifyPlayerGroup([], ['RINCON_000E5878023001400']); }}>TEST REMOVE ANNEX</button>
-        <div>{JSON.stringify(group.playerIds)}</div>
-        <br />
-        <hr />
-      </div>
+      <Grommet style={{ margin: 20 }}>
+        <Box
+          width='300'
+          background='light-2'
+          elevation='small'
+          justify='center'
+          round='small'
+          pad='small'
+        >
+          <div>{group.name}</div>
+          <GroupMetadata groupId={group.id} />
+          <GroupVolume groupId={group.id} />
+          {/* {group.playbackState !== 'PLAYBACK_STATE_IDLE'
+            ? <GroupControl group={group} />
+            : <div>IDLE</div>
+          } */}
+          <GroupControl group={group} />
+          <button onClick={() => { this.modifyPlayerGroup(['RINCON_000E5878023001400'], []); }}>TEST ADD ANNEX</button>
+          <button onClick={() => { this.modifyPlayerGroup([], ['RINCON_000E5878023001400']); }}>TEST REMOVE ANNEX</button>
+          <div>{JSON.stringify(group.playerIds)}</div>
+          <br />
+        </Box>
+      </Grommet>
     );
   }
 }
