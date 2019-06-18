@@ -1,0 +1,95 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
+
+import { getUser } from '../utils/auth';
+
+class GroupMetadata extends Component {
+  state = {
+    playbackMetadata: {},
+    testData: {},
+  }
+
+  componentDidMount() {
+    this.getPlaybackMetadataStatus();
+  }
+
+  handleMetadata = (metadata) => {
+    // console.log(metadata);
+    const updatedMetadata = {
+      name: '',
+      track: '',
+      artist: '',
+      service: '',
+      album: '',
+    };
+
+    if (metadata) {
+      const { container } = metadata;
+      if (Object.prototype.hasOwnProperty.call(container, 'name')) {
+        updatedMetadata.name = container.name;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(metadata, 'currentShow')) {
+        updatedMetadata.track = metadata.currentShow.name;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(container, 'service')) {
+        updatedMetadata.service = container.service.name;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(metadata, 'currentItem')) {
+        if (Object.prototype.hasOwnProperty.call(metadata.currentItem.track, 'name')) {
+          updatedMetadata.track = metadata.currentItem.track.name;
+          updatedMetadata.album = metadata.currentItem.track.album.name;
+          updatedMetadata.artist = metadata.currentItem.track.artist.name;
+        }
+      }
+    }
+
+    this.setState({
+      playbackMetadata: updatedMetadata,
+    });
+  };
+
+  getPlaybackMetadataStatus() {
+    const sonosUser = getUser();
+    const { groupId } = this.props;
+    axios
+      .post('/.netlify/functions/sonos-playbackStatus', {
+        accessToken: sonosUser.token.access_token,
+        groupId,
+        command: 'playbackMetadata',
+      })
+      .then((res) => {
+        // console.log(res);
+        this.setState({
+          testData: res.data,
+        });
+        this.handleMetadata(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  render() {
+    const { playbackMetadata } = this.state;
+    return (
+      <div>
+        {/* <div>{JSON.stringify(this.state.testData)}</div> */}
+        <div>{playbackMetadata.name}</div>
+        <div>{playbackMetadata.track}</div>
+        <div>{playbackMetadata.artist}</div>
+        <div>{playbackMetadata.service}</div>
+        <div>{playbackMetadata.album}</div>
+      </div>
+    );
+  }
+}
+
+GroupMetadata.propTypes = {
+  groupId: PropTypes.string,
+};
+
+export default GroupMetadata;

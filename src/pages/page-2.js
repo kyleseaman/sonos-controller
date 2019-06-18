@@ -4,6 +4,7 @@ import { Link } from 'gatsby';
 
 import Layout from '../components/layout';
 import SEO from '../components/seo';
+import { setUser } from '../utils/auth';
 
 const parseURLToken = (props) => {
   const queryParams = queryString.parse(props.location.search);
@@ -16,8 +17,8 @@ const parseURLToken = (props) => {
 const SecondPage = props => (
   <Layout>
     <SEO title="Page two" />
-    <p>{console.log(props)}</p>
-    {parseURLToken(props)}
+    <p>{console.log(parseURLToken(props))}</p>
+    {setUser(parseURLToken(props))}
     <br/>
     <br/>
     <Link to="/">Go back to the homepage</Link>

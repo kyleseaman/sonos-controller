@@ -1,13 +1,40 @@
-const isBrowser = typeof window !== 'undefined';
+import axios from 'axios';
 
-const getUser = () => (window.localStorage.sonosUser
-  ? JSON.parse(window.localStorage.sonosUser)
+export const isBrowser = typeof window !== 'undefined';
+
+export const getUser = () => (window.localStorage.sonosUser
+  ? JSON.parse(JSON.parse(window.localStorage.sonosUser))
   : {});
 
-// const setUser = user => (window.localStorage.sonosUser = JSON.stringify(user));
+export const setUser = (user) => {
+  window.localStorage.sonosUser = JSON.stringify(user);
+};
 
-// export const isLoggedIn = () => {
-//   if (!isBrowser) return false;
-//   const user = getUser();
-//   return !!user.accessToken;
-// };
+const refreshToken = async (tokenObject) => {
+  axios
+    .post('/.netlify/functions/auth-refresh', { tokenObject })
+    .then((res) => {
+      console.log('REFERESH THE TOKEN', res);
+      setUser(JSON.parse(res));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const isLoggedIn = async () => {
+  // add a check to see if the token is still valid, if not, refresh it
+  const user = getUser();
+  if (!user.token) {
+    return false;
+  }
+
+  if (new Date(user.token.expires_at) < new Date()) {
+    console.log('EXPIRED!!');
+    const token = await refreshToken();
+    setUser(token);
+    return !!token.token;
+  }
+
+  return !!user.token;
+};
