@@ -19,7 +19,6 @@ class HouseHold extends Component {
   }
 
   getGroups = () => {
-    console.log('getGroups!!');
     const { householdId } = this.props;
     const sonosUser = getUser();
     this.setState({ loading: true });

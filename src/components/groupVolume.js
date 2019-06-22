@@ -19,7 +19,6 @@ class GroupVolume extends Component {
     const sonosUser = getUser();
     const { groupId } = this.props;
 
-    console.log(sonosUser.token.access_token);
     axios
       .post('/.netlify/functions/sonos-groupVolume', {
         accessToken: sonosUser.token.access_token,
@@ -27,8 +26,7 @@ class GroupVolume extends Component {
         params,
         command,
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         this.getPlaybackMetadataStatus();
       })
       .catch((err) => {
@@ -60,7 +58,6 @@ class GroupVolume extends Component {
   render() {
     return (
       <div>
-        {/* <button onClick={}>Mute</button> */}
         <div>{`Volume: ${this.state.volume}`}</div>
         <button onClick={() => {
           this.adjustVolume('relative', {
