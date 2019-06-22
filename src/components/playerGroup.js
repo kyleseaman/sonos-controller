@@ -30,6 +30,7 @@ class PlayerGroup extends Component {
       })
       .then((res) => {
         console.log(res);
+        this.props.getGroups();
       })
       .catch((err) => {
         console.log(err);
@@ -88,6 +89,7 @@ class PlayerGroup extends Component {
 PlayerGroup.propTypes = {
   group: PropTypes.object,
   players: PropTypes.array,
+  getGroups: PropTypes.func,
 };
 
 export default PlayerGroup;

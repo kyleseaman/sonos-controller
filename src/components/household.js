@@ -18,24 +18,8 @@ class HouseHold extends Component {
     this.getGroups();
   }
 
-  render() {
-    const { householdId } = this.props;
-    return (
-      <Grommet>
-        <div>{householdId}</div>
-        <div>Groups</div>
-        <Box
-          direction='row'
-          wrap='true'
-        >
-          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} />)}
-        </Box>
-      </Grommet>
-    );
-  }
-
   getGroups = () => {
+    console.log('getGroups!!');
     const { householdId } = this.props;
     const sonosUser = getUser();
     this.setState({ loading: true });
@@ -56,6 +40,25 @@ class HouseHold extends Component {
         });
         console.log(err);
       });
+  }
+
+  render() {
+    const { householdId } = this.props;
+    return (
+      <Grommet>
+        <div>{householdId}</div>
+        <div>Groups</div>
+        <Box
+          direction='row'
+          wrap='true'
+        >
+          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
+          {
+            this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} getGroups={this.getGroups} />)
+          }
+        </Box>
+      </Grommet>
+    );
   }
 }
 

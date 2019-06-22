@@ -15,7 +15,7 @@ class GroupVolume extends Component {
     this.getPlaybackMetadataStatus();
   }
 
-  muteGroup() {
+  adjustVolume(command, params) {
     const sonosUser = getUser();
     const { groupId } = this.props;
 
@@ -24,10 +24,8 @@ class GroupVolume extends Component {
       .post('/.netlify/functions/sonos-groupVolume', {
         accessToken: sonosUser.token.access_token,
         groupId,
-        params: {
-          muted: !this.state.muted,
-        },
-        command: 'mute',
+        params,
+        command,
       })
       .then((res) => {
         console.log(res);
@@ -64,9 +62,21 @@ class GroupVolume extends Component {
       <div>
         {/* <button onClick={}>Mute</button> */}
         <div>{`Volume: ${this.state.volume}`}</div>
-        <button>-</button>
-        <button onClick={() => { this.muteGroup(); }}>{this.state.muted ? 'UNMUTE' : 'MUTE'}</button>
-        <button>+</button>
+        <button onClick={() => {
+          this.adjustVolume('relative', {
+            volumeDelta: -5,
+          });
+        }}>-</button>
+        <button onClick={() => {
+          this.adjustVolume('mute', {
+            muted: !this.state.muted,
+          });
+        }}>{this.state.muted ? 'UNMUTE' : 'MUTE'}</button>
+        <button onClick={() => {
+          this.adjustVolume('relative', {
+            volumeDelta: 5,
+          });
+        }}>+</button>
       </div>
     );
   }
