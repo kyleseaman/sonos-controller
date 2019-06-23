@@ -1,10 +1,33 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 import axios from 'axios';
 import { Box, Grommet } from 'grommet';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import { getUser } from '../utils/auth';
 import PlayerGroup from './playerGroup';
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
+
+  destClone.splice(droppableDestination.index, 0, removed);
+
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
+
+  return result;
+};
 
 class HouseHold extends Component {
   state = {
@@ -16,6 +39,21 @@ class HouseHold extends Component {
 
   componentDidMount() {
     this.getGroups();
+  }
+
+  onDragEnd = (result) => {
+    console.log(result);
+    const { source, destination } = result;
+
+    // if (!destination) {
+
+    // }
+
+    if (source.droppableId === destination.droppableId) {
+      console.log('IGNORE, WE are in the SAME LIST');
+    } else {
+      console.log('MOVING TO THE NEW LIST!');
+    }
   }
 
   getGroups = () => {
@@ -44,19 +82,21 @@ class HouseHold extends Component {
   render() {
     const { householdId } = this.props;
     return (
-      <Grommet>
-        <div>{householdId}</div>
-        <div>Groups</div>
-        <Box
-          direction='row'
-          wrap='true'
-        >
-          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {
-            this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} getGroups={this.getGroups} />)
-          }
-        </Box>
-      </Grommet>
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Grommet>
+          <div>{householdId}</div>
+          <div>Groups</div>
+          <Box
+            direction='row'
+            wrap='true'
+          >
+            {this.state.error ? <div>{this.state.error}</div> : <div></div>}
+            {
+              this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} getGroups={this.getGroups} />)
+            }
+          </Box>
+        </Grommet>
+      </DragDropContext>
     );
   }
 }
