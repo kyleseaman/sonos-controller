@@ -15,7 +15,7 @@ const refreshToken = async (tokenObject) => {
     .post('/.netlify/functions/auth-refresh', { tokenObject })
     .then((res) => {
       console.log('REFERESH THE TOKEN', res);
-      setUser(JSON.parse(res));
+      setUser(res);
     })
     .catch((err) => {
       console.log(err);
@@ -31,7 +31,7 @@ export const isLoggedIn = async () => {
 
   if (new Date(user.token.expires_at) < new Date()) {
     console.log('EXPIRED!!');
-    const token = await refreshToken();
+    const token = await refreshToken(user.token);
     setUser(token);
     return !!token.token;
   }

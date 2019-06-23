@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Box } from 'grommet';
+import {
+  Pause,
+  FastForward,
+  Rewind,
+  Play,
+} from 'grommet-icons';
 
 import { getUser } from '../utils/auth';
 
@@ -36,11 +43,20 @@ class GroupControl extends Component {
 
   render() {
     return (
-      <div>
-        <button onClick={() => { this.handlePlayback('skipToPreviousTrack'); }}>PREVIOUS</button>
-        <button onClick={() => { this.handlePlayback(this.state.paused ? 'play' : 'pause'); }}>{this.state.paused ? 'PLAY' : 'PAUSE'}</button>
-        <button onClick={() => { this.handlePlayback('skipToNextTrack'); }}>NEXT</button>
-      </div>
+      <Box
+        alignSelf='center'
+        direction='row'
+        gap='medium'
+        justify='center'
+        margin='small'
+      >
+        <Rewind size='large' onClick={() => { this.handlePlayback('skipToPreviousTrack'); }} />
+        {this.state.paused
+          ? <Play size='large' onClick={() => { this.handlePlayback('play'); }} />
+          : <Pause size='large' onClick={() => { this.handlePlayback('pause'); }}/>
+        }
+        <FastForward size='large' onClick={() => { this.handlePlayback('skipToNextTrack'); }} />
+      </Box>
     );
   }
 }

@@ -61,7 +61,7 @@ class PlayerGroup extends Component {
     return (
       <Grommet style={{ margin: 20 }}>
         <Box
-          width='300'
+          width='200'
           background='light-2'
           elevation='small'
           justify='center'
@@ -71,14 +71,10 @@ class PlayerGroup extends Component {
           <div>{group.name}</div>
           <GroupMetadata groupId={group.id} />
           <GroupVolume groupId={group.id} />
-          {/* {group.playbackState !== 'PLAYBACK_STATE_IDLE'
-            ? <GroupControl group={group} />
-            : <div>IDLE</div>
-          } */}
           <GroupControl group={group} />
           <button onClick={() => { this.modifyPlayerGroup(['RINCON_000E5878023001400'], []); }}>TEST ADD ANNEX</button>
           <button onClick={() => { this.modifyPlayerGroup([], ['RINCON_000E5878023001400']); }}>TEST REMOVE ANNEX</button>
-          <div>{JSON.stringify(group.playerIds)}</div>
+          {/* <div>{JSON.stringify(group.playerIds)}</div> */}
           <br />
         </Box>
       </Grommet>

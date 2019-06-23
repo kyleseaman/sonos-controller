@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Box } from 'grommet';
+import {
+  AddCircle,
+  SubtractCircle,
+  VolumeMute,
+  Volume,
+} from 'grommet-icons';
 
 import { getUser } from '../utils/auth';
 
@@ -59,21 +66,37 @@ class GroupVolume extends Component {
     return (
       <div>
         <div>{`Volume: ${this.state.volume}`}</div>
-        <button onClick={() => {
-          this.adjustVolume('relative', {
-            volumeDelta: -5,
-          });
-        }}>-</button>
-        <button onClick={() => {
-          this.adjustVolume('mute', {
-            muted: !this.state.muted,
-          });
-        }}>{this.state.muted ? 'UNMUTE' : 'MUTE'}</button>
-        <button onClick={() => {
-          this.adjustVolume('relative', {
-            volumeDelta: 5,
-          });
-        }}>+</button>
+        <Box
+          alignSelf='center'
+          direction='row'
+          gap='medium'
+          justify='center'
+          margin='small'
+        >
+          <SubtractCircle size='large' onClick={() => {
+            this.adjustVolume('relative', {
+              volumeDelta: -5,
+            });
+          }} />
+          {
+            this.state.muted
+              ? <Volume size='large' onClick={() => {
+                this.adjustVolume('mute', {
+                  muted: !this.state.muted,
+                });
+              }} />
+              : <VolumeMute size='large' onClick={() => {
+                this.adjustVolume('mute', {
+                  muted: !this.state.muted,
+                });
+              }} />
+          }
+          <AddCircle size='large' onClick={() => {
+            this.adjustVolume('relative', {
+              volumeDelta: 5,
+            });
+          }} />
+        </Box>
       </div>
     );
   }
