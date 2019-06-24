@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box, Grommet } from 'grommet';
+import { Box, Grommet, Heading } from 'grommet';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { getUser } from '../utils/auth';
@@ -18,25 +18,6 @@ class PlayerGroup extends Component {
   // componentDidMount() {
   // this.getPlaybackStatus();
   // }
-  modifyPlayerGroup(playerIdsToAdd, playerIdsToRemove) {
-    const sonosUser = getUser();
-    const { id } = this.props.group;
-
-    axios
-      .post('/.netlify/functions/sonos-modifyGroupMembers', {
-        accessToken: sonosUser.token.access_token,
-        groupId: id,
-        playerIdsToAdd,
-        playerIdsToRemove,
-      })
-      .then((res) => {
-        console.log(res);
-        this.props.getGroups();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
 
   getPlaybackStatus() {
     const sonosUser = getUser();
@@ -68,18 +49,18 @@ class PlayerGroup extends Component {
           >
             <Grommet style={{ margin: 20 }}>
               <Box
-                width='300'
+                width='300px'
                 background='light-1'
                 elevation='small'
                 justify='center'
                 round='small'
                 pad='small'
               >
-                <div>{group.name}</div>
+                <Heading size='small'>{group.name}</Heading>
                 <GroupMetadata groupId={group.id} />
                 <GroupVolume groupId={group.id} />
                 <GroupControl group={group} />
-                <button onClick={() => { this.modifyPlayerGroup([], ['RINCON_000E5878023001400']); }}>TEST REMOVE ANNEX</button>
+                Players:
                   {group.playerIds.map((playerId, i) => (
                     <Draggable
                       key={playerId}
@@ -92,7 +73,7 @@ class PlayerGroup extends Component {
                           {...draggableProvided.draggableProps}
                           {...draggableProvided.dragHandleProps}
                         >
-                          {`ITEM ${playerId}`}
+                          {playerId}
                         </div>
                       )}
                     </Draggable>
@@ -111,7 +92,6 @@ class PlayerGroup extends Component {
 PlayerGroup.propTypes = {
   group: PropTypes.object,
   players: PropTypes.array,
-  getGroups: PropTypes.func,
 };
 
 export default PlayerGroup;

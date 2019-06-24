@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Box, Heading, Text } from 'grommet';
 
 import { getUser } from '../utils/auth';
 
@@ -76,14 +77,16 @@ class GroupMetadata extends Component {
   render() {
     const { playbackMetadata } = this.state;
     return (
-      <div>
+      <Box
+        wrap='true'
+      >
         {/* <div>{JSON.stringify(this.state.testData)}</div> */}
-        <div>{playbackMetadata.name}</div>
-        <div>{playbackMetadata.track}</div>
-        <div>{playbackMetadata.artist}</div>
-        <div>{playbackMetadata.service}</div>
-        <div>{playbackMetadata.album}</div>
-      </div>
+        <Text weight='bold'>{playbackMetadata.name}</Text>
+        <Text wordBreak='break-word'>{playbackMetadata.track}</Text>
+        <Text>{playbackMetadata.artist}</Text>
+        <Text>{playbackMetadata.service}</Text>
+        <Text>{playbackMetadata.album}</Text>
+      </Box>
     );
   }
 }

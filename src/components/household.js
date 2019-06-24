@@ -45,16 +45,27 @@ class HouseHold extends Component {
     const { source, destination, draggableId } = result;
 
     if (!destination) {
-      // we can use this to break up a group, need a check to see if player is grouped
+      // we can use this to break up a group
+      // check to see if player is grouped first
+      this.state.groups.forEach((group) => {
+        if (group.id === source.droppableId) {
+          const { playerIds } = group;
+          if (playerIds.length > 1 && playerIds.includes(draggableId)) {
+            this.modifyPlayerGroup(
+              source.droppableId,
+              [],
+              [draggableId],
+            );
+          }
+        }
+      });
       return;
     }
 
     if (source.droppableId === destination.droppableId) {
-      console.log('IGNORE, WE are in the SAME LIST');
-      console.log(result);
+      console.log('IGNORE, We are in the same list');
     } else {
       console.log(`MOVING TO THE NEW LIST! ${result.draggableId}`);
-      console.log('MOVE ', draggableId);
       // this assumes one player at a time
       this.modifyPlayerGroup(
         destination.droppableId,
@@ -111,14 +122,13 @@ class HouseHold extends Component {
       <DragDropContext onDragEnd={this.onDragEnd}>
         <Grommet>
           <div>{householdId}</div>
-          <div>Groups</div>
           <Box
             direction='row'
             wrap='true'
           >
             {this.state.error ? <div>{this.state.error}</div> : <div></div>}
             {
-              this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} getGroups={this.getGroups} />)
+              this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} />)
             }
           </Box>
         </Grommet>
