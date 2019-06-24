@@ -60,6 +60,7 @@ public
 
 #netlify
 functions*
+.netlify/
 
 # Mac files
 .DS_Store
