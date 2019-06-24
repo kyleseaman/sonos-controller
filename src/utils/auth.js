@@ -3,11 +3,14 @@ import axios from 'axios';
 export const isBrowser = typeof window !== 'undefined';
 
 export const getUser = () => (window.localStorage.sonosUser
-  ? JSON.parse(JSON.parse(window.localStorage.sonosUser))
+  ? JSON.parse(window.localStorage.sonosUser)
   : {});
 
 export const setUser = (user) => {
-  window.localStorage.sonosUser = JSON.stringify(user);
+  if (isBrowser) {
+    console.log('SETU USER', user);
+    window.localStorage.sonosUser = JSON.stringify(user);
+  }
 };
 
 const refreshToken = async (tokenObject) => {
@@ -25,7 +28,9 @@ const refreshToken = async (tokenObject) => {
 export const isLoggedIn = async () => {
   // add a check to see if the token is still valid, if not, refresh it
   const user = getUser();
+  console.log('USER!!!', user);
   if (!user.token) {
+    console.log('no user token');
     return false;
   }
 
