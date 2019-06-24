@@ -20,6 +20,7 @@
     "grommet": "^2.7.1",
     "grommet-icons": "^4.2.0",
     "net": "^1.0.2",
+    "netlify-cli": "^2.11.23",
     "node-persist": "^3.0.4",
     "prop-types": "^15.7.2",
     "query-string": "^6.5.0",
