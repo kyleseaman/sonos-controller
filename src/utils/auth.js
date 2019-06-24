@@ -32,7 +32,7 @@ export const isLoggedIn = async () => {
   if (new Date(user.token.expires_at) < new Date()) {
     console.log('EXPIRED!!');
     const token = await refreshToken(user.token);
-    setUser(token);
+    setUser(token.data);
     return !!token.token;
   }
 
