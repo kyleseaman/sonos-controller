@@ -42,18 +42,44 @@ class HouseHold extends Component {
   }
 
   onDragEnd = (result) => {
-    console.log(result);
-    const { source, destination } = result;
+    const { source, destination, draggableId } = result;
 
-    // if (!destination) {
-
-    // }
+    if (!destination) {
+      // we can use this to break up a group, need a check to see if player is grouped
+      return;
+    }
 
     if (source.droppableId === destination.droppableId) {
       console.log('IGNORE, WE are in the SAME LIST');
+      console.log(result);
     } else {
-      console.log('MOVING TO THE NEW LIST!');
+      console.log(`MOVING TO THE NEW LIST! ${result.draggableId}`);
+      console.log('MOVE ', draggableId);
+      // this assumes one player at a time
+      this.modifyPlayerGroup(
+        destination.droppableId,
+        [draggableId],
+        [],
+      );
     }
+  }
+
+  modifyPlayerGroup(groupId, playerIdsToAdd, playerIdsToRemove) {
+    const sonosUser = getUser();
+    axios
+      .post('/.netlify/functions/sonos-modifyGroupMembers', {
+        accessToken: sonosUser.token.access_token,
+        groupId,
+        playerIdsToAdd,
+        playerIdsToRemove,
+      })
+      .then((res) => {
+        console.log(res);
+        this.getGroups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   getGroups = () => {
