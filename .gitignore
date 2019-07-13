@@ -64,6 +64,7 @@ public
 
 # Mac files
 .DS_Store
+.vscode
 
 # Yarn
 yarn-error.log
@@ -71,7 +72,6 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
-
 
 # next.js build output
 .next
