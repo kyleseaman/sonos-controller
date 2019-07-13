@@ -28,7 +28,6 @@ const refreshToken = async (tokenObject) => {
 export const isLoggedIn = async () => {
   // add a check to see if the token is still valid, if not, refresh it
   const user = getUser();
-  console.log('USER!!!', user);
   if (!user.token) {
     console.log('no user token');
     return false;
