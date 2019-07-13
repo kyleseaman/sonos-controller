@@ -59,7 +59,7 @@ typings/
 public
 
 #netlify
-functions*
+# functions*
 # .netlify/
 
 # Mac files
