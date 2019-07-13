@@ -17,7 +17,7 @@ const theme = {
   },
 };
 
-class SonosAPI extends Component {
+class Demo extends Component {
   state = {
     loading: false,
     error: null,
@@ -53,13 +53,14 @@ class SonosAPI extends Component {
       <Layout>
         <Grommet theme={theme}>
           <Link to="/">Go home</Link><br/>
-          {this.state.loading ? <div>Loading Household</div> : <div></div>}
+          {JSON.stringify(this.state.households)}
+          {/* {this.state.loading ? <div>Loading Household</div> : <div></div>}
           {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {this.state.households.map((hh, i) => <HouseHold key={i} householdId={hh.id}/>)}
+          {this.state.households.map((hh, i) => <HouseHold key={i} householdId={hh.id}/>)} */}
         </Grommet>
       </Layout>
     );
   }
 }
 
-export default SonosAPI;
+export default Demo;
