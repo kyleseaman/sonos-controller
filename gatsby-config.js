@@ -3,9 +3,9 @@ const proxy = require('http-proxy-middleware');
 
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
-    description: 'Kick off your next, great Gatsby project with this default starter. This barebones starter ships with the main Gatsby configuration files you might need.',
-    author: '@gatsbyjs',
+    title: 'Sonos API Demo',
+    description: 'Demo React app to highlight the different Control APIs available with the Sonos Open Platform.',
+    author: '@kyleseaman',
   },
   developMiddleware: (app) => {
     app.use(
@@ -32,13 +32,13 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'gatsby-starter-default',
-        short_name: 'starter',
+        name: 'sonso-api-playground',
+        short_name: 'sonos demo',
         start_url: '/',
         background_color: '#663399',
         theme_color: '#663399',
         display: 'minimal-ui',
-        icon: 'src/images/gatsby-icon.png', // This path is relative to the root of the site.
+        icon: 'src/images/sonos.png', // This path is relative to the root of the site.
       },
     },
     'gatsby-plugin-netlify',
