@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'gatsby';
 import axios from 'axios';
-import { Button, Grommet } from 'grommet';
+import { Button, Box, Grid, Grommet, Heading } from 'grommet';
 import ReactJSON from 'react-json-view';
 
 import { getUser } from '../utils/auth';
 import Layout from '../components/layout';
-import HouseHold from '../components/household';
-import JSONView from '../components/JSONView';
 
 const theme = {
   global: {
@@ -23,22 +20,28 @@ class Demo extends Component {
   state = {
     loading: false,
     error: null,
+    heading: '',
+    body: [],
+    response: [],
     households: [],
-  }
-
-  componentDidMount() {
-    this.getHouseHolds();
   }
 
   getHouseHolds = () => {
     const sonosUser = getUser();
-    this.setState({ loading: true });
+    this.setState({ 
+      loading: true,
+      body: {
+        accessToken: '<USER_ACCESS_TOKEN>',
+      },
+      heading: 'GET /control/api/v1/households'
+    });
     axios
       .post('/.netlify/functions/sonos-households', { accessToken: sonosUser.token.access_token })
       .then((res) => {
         this.setState({
           loading: false,
           households: res.data.households,
+          response: res.data,
         });
       })
       .catch((err) => {
@@ -49,6 +52,36 @@ class Demo extends Component {
         });
       });
   }
+
+  getGroups = (householdId) => {
+    console.log(householdId);
+    const sonosUser = getUser();
+    this.setState({
+      loading: true,
+      body: {
+        accessToken: '<USER_ACCESS_TOKEN>',
+        householdId,
+      },
+      heading: 'GET /households/{householdId}/groups',
+    });
+    axios
+      .post('/.netlify/functions/sonos-groups', { accessToken: sonosUser.token.access_token, householdId })
+      .then((res) => {
+        this.setState({
+          loading: false,
+          response: res.data,
+        });
+      })
+      .catch((err) => {
+        console.log('ERROR HERE????');
+        this.setState({
+          error: err,
+          loading: false,
+        });
+        console.log(err);
+      });
+  }
+
 
   testAudioClip = () => {
     const sonosUser = getUser();
@@ -71,20 +104,37 @@ class Demo extends Component {
     return (
       <Layout>
         <Grommet theme={theme}>
-          <Link to="/">Go home</Link><br/>
-          <Button onClick={() => {this.testAudioClip()}}>DEMO!</Button><br/>
-          {JSON.stringify(this.state.households)}
-          <div style={{fontSize: '1.5em'}}>
-            <ReactJSON src={this.state.households} enableClipboard={false} name='HouseHolds' displayDataTypes={false} displayObjectSize={false} />
+          <div>
+            <Grid
+              rows={['xsmall', 'large']}
+              columns={['small', 'large']}
+              gap='small'
+              areas={[
+                { name: 'header', start: [0,0], end: [1,0]},
+                { name: 'left', start: [0,1], end: [0,1]},
+                { name: 'right', start: [1,1], end: [1,1]},
+              ]}
+            >
+              <Box margin='xsmall' justify='center' justifyContent='center' gridArea='header' background='dark-2' >
+                <Heading>{this.state.heading}</Heading>
+              </Box>
+              <Box gridArea='left' background='light-2' >
+                <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => {this.getHouseHolds()}} />
+                <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => {this.getGroups(this.state.households[0].id)}} />
+                <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => {this.getHouseHolds()}} />
+                <Button margin='xsmall'  alignSelf='stretch' label='audioClip Demo' onClick={() => {this.testAudioClip()}} />
+              </Box>
+              <Box gridArea='right'>
+              <div style={{fontSize: '1.3em', margin: '20px'}}>
+                  <ReactJSON src={this.state.body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
+              </div>
+              <hr />
+              <div style={{fontSize: '1.3em', margin: '20px'}}>
+                  <ReactJSON src={this.state.response} enableClipboard={false} name='response' displayDataTypes={false} displayObjectSize={false} />
+              </div>
+              </Box>
+            </Grid>
           </div>
-          <JSONView content={this.state.households} />
-          {/* <ReactJSON
-            enableClipboard='false'
-            src={this.state.households}/> */}
-        
-          {/* {this.state.loading ? <div>Loading Household</div> : <div></div>}
-          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {this.state.households.map((hh, i) => <HouseHold key={i} householdId={hh.id}/>)} */}
         </Grommet>
       </Layout>
     );
