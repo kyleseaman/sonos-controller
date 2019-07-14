@@ -56,15 +56,20 @@ typings/
 
 # gatsby files
 .cache/
-public
+public/
+dist/
+bin/
 
 #netlify
 # functions*
 # .netlify/
+.cache
+
+/built-functions
 
 # Mac files
 .DS_Store
-.vscode
+.vscode/
 
 # Yarn
 yarn-error.log

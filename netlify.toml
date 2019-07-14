@@ -1,4 +1,4 @@
 [build]
   command = "npm run-script build"
-  functions = "./functions"
+  functions = "./built-functions"
   publish = "public/"
