@@ -23,17 +23,21 @@ class Demo extends Component {
     heading: '',
     body: [],
     response: [],
+    headers: [],
     households: [],
+    players: [],
+    groups: [],
   }
 
   getHouseHolds = () => {
+    this.resetState()
     const sonosUser = getUser();
     this.setState({ 
       loading: true,
-      body: {
+      headers: {
         accessToken: '<USER_ACCESS_TOKEN>',
       },
-      heading: 'GET /control/api/v1/households'
+      heading: 'GET /households'
     });
     axios
       .post('/.netlify/functions/sonos-households', { accessToken: sonosUser.token.access_token })
@@ -53,14 +57,41 @@ class Demo extends Component {
       });
   }
 
+  resetState = () => {
+    this.setState({
+      headers: [],
+      body: [],
+      response: [],
+      heading: '',
+    });
+  }
+
+  getClipCapablePlayers = () => {
+    const { players } = this.state;
+    this.resetState()
+    const clipCapablePlayers = [];
+    for (let player of players) {
+      if (player.capabilities.includes('AUDIO_CLIP')) {
+        clipCapablePlayers.push({
+          id: player.id,
+          name: player.name,
+        })
+      }
+    }
+    this.setState({
+      response: clipCapablePlayers,
+      heading: 'Filter for \'AUDIO_CLIP\''
+    });
+  }
+
   getGroups = (householdId) => {
-    console.log(householdId);
+    this.resetState()
     const sonosUser = getUser();
     this.setState({
       loading: true,
-      body: {
+      headers: {
         accessToken: '<USER_ACCESS_TOKEN>',
-        householdId,
+        householdId: 'Sonos_....',
       },
       heading: 'GET /households/{householdId}/groups',
     });
@@ -70,6 +101,8 @@ class Demo extends Component {
         this.setState({
           loading: false,
           response: res.data,
+          players: res.data.players,
+          groups: res.data.groups,
         });
       })
       .catch((err) => {
@@ -82,9 +115,21 @@ class Demo extends Component {
       });
   }
 
-
   testAudioClip = () => {
+    this.resetState()
     const sonosUser = getUser();
+    this.setState({
+      body: {
+        streamUrl: 'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
+        name: 'Sonos AudioClip Demo',
+        appId: 'com.me.sonosdemo',
+      },
+      headers: {
+        accessToken: '<USER_ACCESS_TOKEN>',
+        playerId: 'RINCON_...'
+      },
+      heading: 'POST /players/{playerId}/audioClip'
+    })
     axios
     .post('/.netlify/functions/sonos-audioClip', { 
         accessToken: sonosUser.token.access_token,
@@ -96,6 +141,9 @@ class Demo extends Component {
         },
     })
     .then((res) => {
+      this.setState({
+        response: res.data,
+      })
         console.log(res)
     });
   }
@@ -121,10 +169,13 @@ class Demo extends Component {
               <Box gridArea='left' background='light-2' >
                 <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => {this.getHouseHolds()}} />
                 <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => {this.getGroups(this.state.households[0].id)}} />
-                <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => {this.getHouseHolds()}} />
+                <Button margin='xsmall' alignSelf='stretch' label='getClipCapablePlayers' onClick={() => {this.getClipCapablePlayers()}} />
                 <Button margin='xsmall'  alignSelf='stretch' label='audioClip Demo' onClick={() => {this.testAudioClip()}} />
               </Box>
               <Box gridArea='right'>
+              <div style={{fontSize: '1.3em', margin: '20px'}}>
+                  <ReactJSON src={this.state.headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
+              </div>
               <div style={{fontSize: '1.3em', margin: '20px'}}>
                   <ReactJSON src={this.state.body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
               </div>
