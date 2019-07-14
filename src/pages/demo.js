@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Box, Grid, Grommet, Heading } from 'grommet';
-// if (typeof window !== 'undefined') {
-//   const ReactJSON = require('react-json-view')
-// }
+import { Button, Box, Grid, Grommet, Heading, Select } from 'grommet';
 import ReactJSON from 'react-json-view';
 
 import { getUser } from '../utils/auth';
@@ -30,6 +27,9 @@ class Demo extends Component {
     households: [],
     players: [],
     groups: [],
+    clipCapablePlayers: [],
+    clipCapablePlayerNames: [],
+    selectedPlayer: '',
   }
 
   getHouseHolds = () => {
@@ -73,15 +73,19 @@ class Demo extends Component {
     const { players } = this.state;
     this.resetState()
     const clipCapablePlayers = [];
+    const clipCapablePlayerNames = [];
     for (let player of players) {
       if (player.capabilities.includes('AUDIO_CLIP')) {
         clipCapablePlayers.push({
           id: player.id,
           name: player.name,
         })
+        clipCapablePlayerNames.push(player.name)
       }
     }
     this.setState({
+      clipCapablePlayerNames,
+      clipCapablePlayers,
       response: clipCapablePlayers,
       heading: 'Filter for \'AUDIO_CLIP\''
     });
@@ -121,6 +125,11 @@ class Demo extends Component {
   testAudioClip = () => {
     this.resetState()
     const sonosUser = getUser();
+    const { clipCapablePlayers, selectedPlayer } = this.state;
+    const selectedPlayerObject = clipCapablePlayers.find(function(player) {
+      return player.name === selectedPlayer
+    })
+
     this.setState({
       body: {
         streamUrl: 'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
@@ -129,14 +138,14 @@ class Demo extends Component {
       },
       headers: {
         accessToken: '<USER_ACCESS_TOKEN>',
-        playerId: 'RINCON_...'
+        playerId: selectedPlayerObject.id,
       },
       heading: 'POST /players/{playerId}/audioClip'
     })
     axios
     .post('/.netlify/functions/sonos-audioClip', { 
         accessToken: sonosUser.token.access_token,
-        playerId: 'RINCON_5CAAFDD0162601400',
+        playerId: selectedPlayerObject.id,
         params: {
             streamUrl: 'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
             name: 'Sonos AudioClip Demo',
@@ -152,6 +161,7 @@ class Demo extends Component {
   }
 
   render() {
+    const { body, clipCapablePlayerNames, headers, heading, households, response, selectedPlayer } = this.state;
     return (
       <Layout>
         <Grommet theme={theme}>
@@ -167,31 +177,42 @@ class Demo extends Component {
               ]}
             >
               <Box margin='xsmall' justify='center' justifyContent='center' gridArea='header' background='dark-2' >
-                <Heading>{this.state.heading}</Heading>
+                <Heading>{heading}</Heading>
               </Box>
               <Box gridArea='left' background='light-2' >
                 <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => {this.getHouseHolds()}} />
-                <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => {this.getGroups(this.state.households[0].id)}} />
+                <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => {this.getGroups(households[0].id)}} />
                 <Button margin='xsmall' alignSelf='stretch' label='getClipCapablePlayers' onClick={() => {this.getClipCapablePlayers()}} />
-                <Button margin='xsmall'  alignSelf='stretch' label='audioClip Demo' onClick={() => {this.testAudioClip()}} />
+                <div style={{marginTop: '40px'}}>
+                  <Select
+                    margin='small'
+                    multiple={false}
+                    options={clipCapablePlayerNames}
+                    onChange={event => this.setState({
+                      selectedPlayer: event.value,
+                    })}
+                    value={selectedPlayer}
+                  ></Select>
+                  <Button margin='xsmall'  alignSelf='stretch' label='audioClip Demo' onClick={() => {this.testAudioClip()}} />
+                </div>
               </Box>
               <Box gridArea='right'>
               <div style={{fontSize: '1.3em', margin: '20px'}}>
                 {typeof window !== 'undefined' ? 
-                  <ReactJSON src={this.state.headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
+                  <ReactJSON src={headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
                   : <div></div>
                 }
               </div>
               <div style={{fontSize: '1.3em', margin: '20px'}}>
                 {typeof window !== 'undefined' ? 
-                  <ReactJSON src={this.state.body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
+                  <ReactJSON src={body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
                   : <div></div>
                 }
               </div>
               <hr />
               <div style={{fontSize: '1.3em', margin: '20px'}}>
                 {typeof window !== 'undefined' ? 
-                  <ReactJSON src={this.state.response} enableClipboard={false} name='response' displayDataTypes={false} displayObjectSize={false} />
+                  <ReactJSON src={response} enableClipboard={false} name='response' displayDataTypes={false} displayObjectSize={false} />
                   : <div></div>
                 }
               </div>
