@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Button, Box, Grid, Grommet, Heading, Select } from 'grommet';
+import { Button, Box, Grid, Grommet, Heading, Select, Text } from 'grommet';
 import ReactJSON from 'react-json-view';
 
 import { getUser } from '../utils/auth';
@@ -184,6 +184,7 @@ class Demo extends Component {
                 <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => {this.getGroups(households[0].id)}} />
                 <Button margin='xsmall' alignSelf='stretch' label='getClipCapablePlayers' onClick={() => {this.getClipCapablePlayers()}} />
                 <div style={{marginTop: '40px'}}>
+                  <Text margin='small' textAlign='center' weight='bold' size='large'>audioClip Demo</Text>
                   <Select
                     margin='small'
                     multiple={false}
@@ -193,7 +194,7 @@ class Demo extends Component {
                     })}
                     value={selectedPlayer}
                   ></Select>
-                  <Button margin='xsmall'  alignSelf='stretch' label='audioClip Demo' onClick={() => {this.testAudioClip()}} />
+                  <Button margin='xsmall'  alignSelf='stretch' label='Send audioClip' onClick={() => {this.testAudioClip()}} />
                 </div>
               </Box>
               <Box gridArea='right'>
