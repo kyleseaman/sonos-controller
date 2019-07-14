@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Button, Box, Grid, Grommet, Heading } from 'grommet';
+// if (typeof window !== 'undefined') {
+//   const ReactJSON = require('react-json-view')
+// }
 import ReactJSON from 'react-json-view';
 
 import { getUser } from '../utils/auth';
@@ -174,14 +177,23 @@ class Demo extends Component {
               </Box>
               <Box gridArea='right'>
               <div style={{fontSize: '1.3em', margin: '20px'}}>
+                {typeof window !== 'undefined' ? 
                   <ReactJSON src={this.state.headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
+                  : <div></div>
+                }
               </div>
               <div style={{fontSize: '1.3em', margin: '20px'}}>
+                {typeof window !== 'undefined' ? 
                   <ReactJSON src={this.state.body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
+                  : <div></div>
+                }
               </div>
               <hr />
               <div style={{fontSize: '1.3em', margin: '20px'}}>
+                {typeof window !== 'undefined' ? 
                   <ReactJSON src={this.state.response} enableClipboard={false} name='response' displayDataTypes={false} displayObjectSize={false} />
+                  : <div></div>
+                }
               </div>
               </Box>
             </Grid>
