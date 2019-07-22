@@ -24,6 +24,7 @@ class Demo extends Component {
     error: null,
     heading: '',
     body: [],
+    params: [],
     response: [],
     headers: [],
     households: [],
@@ -42,7 +43,8 @@ class Demo extends Component {
     this.setState({
       loading: true,
       headers: {
-        accessToken: '<USER_ACCESS_TOKEN>',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer <USER_ACCESS_TOKEN>',
       },
       heading: 'GET /households',
     });
@@ -104,7 +106,10 @@ class Demo extends Component {
     this.setState({
       loading: true,
       headers: {
-        accessToken: '<USER_ACCESS_TOKEN>',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer <USER_ACCESS_TOKEN>',
+      },
+      params: {
         householdId: 'Sonos_....',
       },
       heading: 'GET /households/{householdId}/groups',
@@ -142,7 +147,10 @@ class Demo extends Component {
         appId: 'com.me.sonosdemo',
       },
       headers: {
-        accessToken: '<USER_ACCESS_TOKEN>',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer <USER_ACCESS_TOKEN>',
+      },
+      params: {
         playerId: selectedPlayerObject.id,
       },
       heading: 'POST /players/{playerId}/audioClip',
