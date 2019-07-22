@@ -183,6 +183,7 @@ class Demo extends Component {
       selectedPlayer,
       householdNames,
       selectedHouseHold,
+      params,
     } = this.state;
     return (
       <Layout>
@@ -233,6 +234,12 @@ class Demo extends Component {
               <div style={{ fontSize: '1.3em', margin: '20px' }}>
                 {typeof window !== 'undefined'
                   ? <ReactJSON src={headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
+                  : <div></div>
+                }
+              </div>
+              <div style={{ fontSize: '1.3em', margin: '20px' }}>
+                {typeof window !== 'undefined'
+                  ? <ReactJSON src={params} enableClipboard={false} name='params' displayDataTypes={false} displayObjectSize={false} />
                   : <div></div>
                 }
               </div>
