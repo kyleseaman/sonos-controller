@@ -239,7 +239,7 @@ class Demo extends Component {
               </div>
               <div style={{ fontSize: '1.3em', margin: '20px' }}>
                 {typeof window !== 'undefined'
-                  ? <ReactJSON src={params} enableClipboard={false} name='params' displayDataTypes={false} displayObjectSize={false} />
+                  ? <ReactJSON src={params} enableClipboard={false} name='params'npm displayDataTypes={false} displayObjectSize={false} />
                   : <div></div>
                 }
               </div>
