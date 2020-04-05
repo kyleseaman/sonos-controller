@@ -59,7 +59,7 @@ class PlayerGroup extends Component {
                 <Heading size='small'>{group.name}</Heading>
                 <GroupMetadata groupId={group.id} />
                 <GroupVolume groupId={group.id} />
-                <GroupControl group={group} />
+                <GroupControl group={group} refreshPlaybackStatus={() => { this.getPlaybackStatus(); }} />
                 Players:
                   {group.playerIds.map((playerId, i) => (
                     <Draggable

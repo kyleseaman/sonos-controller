@@ -46,8 +46,7 @@ dist/
 bin/
 
 #netlify
-# functions*
-/.netlify/
+/.netlify
 .cache
 
 /built-functions
