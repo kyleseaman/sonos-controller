@@ -1,22 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import {
-  Button, Box, Grid, Grommet, Heading, Select, Text,
-} from 'grommet';
+import { Button, Box, Grid, Grommet, Heading, Select, Text } from 'grommet';
 import ReactJSON from 'react-json-view';
 
 import { getUser } from '../utils/auth';
 import Layout from '../components/layout';
-
-const theme = {
-  global: {
-    font: {
-      family: 'Roboto',
-      size: '14px',
-      height: '20px',
-    },
-  },
-};
+import AppTheme from '../utils/theme';
 
 class Demo extends Component {
   state = {
@@ -35,7 +24,7 @@ class Demo extends Component {
     householdNames: [],
     selectedHouseHold: '',
     selectedPlayer: '',
-  }
+  };
 
   getHouseHolds = () => {
     this.resetState();
@@ -49,8 +38,10 @@ class Demo extends Component {
       heading: 'GET /households',
     });
     axios
-      .post('/.netlify/functions/sonos-households', { accessToken: sonosUser.token.access_token })
-      .then((res) => {
+      .post('/.netlify/functions/sonos-households', {
+        accessToken: sonosUser.token.access_token,
+      })
+      .then(res => {
         this.setState({
           loading: false,
           households: res.data.households,
@@ -58,14 +49,14 @@ class Demo extends Component {
           householdNames: res.data.households.map(household => household.id),
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         this.setState({
           error: err.message,
           loading: false,
         });
       });
-  }
+  };
 
   resetState = () => {
     this.setState({
@@ -74,14 +65,14 @@ class Demo extends Component {
       response: [],
       heading: '',
     });
-  }
+  };
 
   getClipCapablePlayers = () => {
     this.resetState();
     const { players } = this.state;
     const clipCapablePlayers = [];
     const clipCapablePlayerNames = [];
-    players.forEach((player) => {
+    players.forEach(player => {
       if (player.capabilities.includes('AUDIO_CLIP')) {
         clipCapablePlayers.push({
           id: player.id,
@@ -95,9 +86,9 @@ class Demo extends Component {
       clipCapablePlayerNames,
       clipCapablePlayers,
       response: clipCapablePlayers,
-      heading: 'Filter for \'AUDIO_CLIP\'',
+      heading: "Filter for 'AUDIO_CLIP'",
     });
-  }
+  };
 
   getGroups = () => {
     this.resetState();
@@ -115,8 +106,11 @@ class Demo extends Component {
       heading: 'GET /households/{householdId}/groups',
     });
     axios
-      .post('/.netlify/functions/sonos-groups', { accessToken: sonosUser.token.access_token, householdId: selectedHouseHold })
-      .then((res) => {
+      .post('/.netlify/functions/sonos-groups', {
+        accessToken: sonosUser.token.access_token,
+        householdId: selectedHouseHold,
+      })
+      .then(res => {
         this.setState({
           loading: false,
           response: res.data,
@@ -124,7 +118,7 @@ class Demo extends Component {
           groups: res.data.groups,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log('ERROR HERE????');
         this.setState({
           error: err,
@@ -132,17 +126,20 @@ class Demo extends Component {
         });
         console.log(err);
       });
-  }
+  };
 
   testAudioClip = () => {
     this.resetState();
     const sonosUser = getUser();
     const { clipCapablePlayers, selectedPlayer } = this.state;
-    const selectedPlayerObject = clipCapablePlayers.find(player => player.name === selectedPlayer);
+    const selectedPlayerObject = clipCapablePlayers.find(
+      player => player.name === selectedPlayer,
+    );
 
     this.setState({
       body: {
-        streamUrl: 'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
+        streamUrl:
+          'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
         name: 'Sonos AudioClip Demo',
         appId: 'com.me.sonosdemo',
       },
@@ -160,18 +157,19 @@ class Demo extends Component {
         accessToken: sonosUser.token.access_token,
         playerId: selectedPlayerObject.id,
         params: {
-          streamUrl: 'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
+          streamUrl:
+            'https://audio-clip-doorbell.s3.us-east-2.amazonaws.com/doorbell-1.mp3',
           name: 'Sonos AudioClip Demo',
           appId: 'com.me.sonosdemo',
         },
       })
-      .then((res) => {
+      .then(res => {
         this.setState({
           response: res.data,
         });
         console.log(res);
       });
-  }
+  };
 
   render() {
     const {
@@ -186,81 +184,182 @@ class Demo extends Component {
       params,
     } = this.state;
     return (
-      <Layout>
-        <Grommet theme={theme}>
+      <Grommet theme={AppTheme} themeMode="light" full>
+        <Layout>
           <div>
             <Grid
               rows={['xsmall', 'large']}
               columns={['small', 'large']}
-              gap='small'
+              gap="small"
               areas={[
                 { name: 'header', start: [0, 0], end: [1, 0] },
                 { name: 'left', start: [0, 1], end: [0, 1] },
                 { name: 'right', start: [1, 1], end: [1, 1] },
               ]}
             >
-              <Box margin='xsmall' justify='center' justifyContent='center' gridArea='header' background='dark-2' >
+              <Box
+                margin="xsmall"
+                justify="center"
+                justifyContent="center"
+                gridArea="header"
+                background="dark-2"
+              >
                 <Heading>{heading}</Heading>
               </Box>
-              <Box gridArea='left' background='light-2' >
-                <Button margin='xsmall' alignSelf='stretch' label='getHouseHolds' onClick={() => { this.getHouseHolds(); }} />
-                <Text margin='small' textAlign='center' weight='bold' size='large'>choose household</Text>
-                  <Select
-                    margin='small'
-                    multiple={false}
-                    options={householdNames}
-                    onChange={event => this.setState({
+              <Box gridArea="left" background="light-2">
+                <Button
+                  margin="xsmall"
+                  alignSelf="stretch"
+                  label="getHouseHolds"
+                  onClick={() => {
+                    this.getHouseHolds();
+                  }}
+                />
+                <Text
+                  margin="small"
+                  textAlign="center"
+                  weight="bold"
+                  size="large"
+                >
+                  choose household
+                </Text>
+                <Select
+                  margin="small"
+                  multiple={false}
+                  options={householdNames}
+                  onChange={event =>
+                    this.setState({
                       selectedHouseHold: event.value,
-                    })}
-                    value={selectedHouseHold}
-                  ></Select>
-                <Button margin='xsmall' alignSelf='stretch' label='getGroups' onClick={() => { this.getGroups(); }} />
-                <Button margin='xsmall' alignSelf='stretch' label='getClipCapablePlayers' onClick={() => { this.getClipCapablePlayers(); }} />
+                    })
+                  }
+                  value={selectedHouseHold}
+                ></Select>
+                <Button
+                  margin="xsmall"
+                  alignSelf="stretch"
+                  label="getGroups"
+                  onClick={() => {
+                    this.getGroups();
+                  }}
+                />
+                <Button
+                  margin="xsmall"
+                  alignSelf="stretch"
+                  label="getClipCapablePlayers"
+                  onClick={() => {
+                    this.getClipCapablePlayers();
+                  }}
+                />
                 <div style={{ marginTop: '40px' }}>
-                  <Text margin='small' textAlign='center' weight='bold' size='large'>audioClip Demo</Text>
+                  <Text
+                    margin="small"
+                    textAlign="center"
+                    weight="bold"
+                    size="large"
+                  >
+                    audioClip Demo
+                  </Text>
                   <Select
-                    margin='small'
+                    margin="small"
                     multiple={false}
                     options={clipCapablePlayerNames}
-                    onChange={event => this.setState({
-                      selectedPlayer: event.value,
-                    })}
+                    onChange={event =>
+                      this.setState({
+                        selectedPlayer: event.value,
+                      })
+                    }
                     value={selectedPlayer}
                   ></Select>
-                  <Button margin='xsmall' alignSelf='stretch' label='Send audioClip' onClick={() => { this.testAudioClip(); }} />
+                  <Button
+                    margin="xsmall"
+                    alignSelf="stretch"
+                    label="Send audioClip"
+                    onClick={() => {
+                      this.testAudioClip();
+                    }}
+                  />
                 </div>
               </Box>
-              <Box gridArea='right'>
-              <div style={{ fontSize: '1.3em', margin: '20px' }}>
-                {typeof window !== 'undefined'
-                  ? <ReactJSON src={headers} enableClipboard={false} name='headers' displayDataTypes={false} displayObjectSize={false} />
-                  : <div></div>
-                }
-              </div>
-              <div style={{ fontSize: '1.3em', margin: '20px' }}>
-                {typeof window !== 'undefined'
-                  ? <ReactJSON src={params} enableClipboard={false} name='params'npm displayDataTypes={false} displayObjectSize={false} />
-                  : <div></div>
-                }
-              </div>
-              <div style={{ fontSize: '1.3em', margin: '20px' }}>
-                {typeof window !== 'undefined'
-                  ? <ReactJSON src={body} enableClipboard={false} name='body' displayDataTypes={false} displayObjectSize={false} />
-                  : <div></div>
-                }
-              </div>
-              <hr />
-              <div style={{ fontSize: '1.3em', margin: '20px' }}>
-                {typeof window !== 'undefined'
-                  ? <ReactJSON src={response} enableClipboard={false} name='response' displayDataTypes={false} displayObjectSize={false} />
-                  : <div></div>
-                }
-              </div>
+              <Box gridArea="right">
+                <div
+                  style={{
+                    fontSize: '1.3em',
+                    margin: '20px',
+                  }}
+                >
+                  {typeof window !== 'undefined' ? (
+                    <ReactJSON
+                      src={headers}
+                      enableClipboard={false}
+                      name="headers"
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                    />
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+                <div
+                  style={{
+                    fontSize: '1.3em',
+                    margin: '20px',
+                  }}
+                >
+                  {typeof window !== 'undefined' ? (
+                    <ReactJSON
+                      src={params}
+                      enableClipboard={false}
+                      name="params"
+                      npm
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                    />
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+                <div
+                  style={{
+                    fontSize: '1.3em',
+                    margin: '20px',
+                  }}
+                >
+                  {typeof window !== 'undefined' ? (
+                    <ReactJSON
+                      src={body}
+                      enableClipboard={false}
+                      name="body"
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                    />
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
+                <hr />
+                <div
+                  style={{
+                    fontSize: '1.3em',
+                    margin: '20px',
+                  }}
+                >
+                  {typeof window !== 'undefined' ? (
+                    <ReactJSON
+                      src={response}
+                      enableClipboard={false}
+                      name="response"
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                    />
+                  ) : (
+                    <div></div>
+                  )}
+                </div>
               </Box>
             </Grid>
           </div>
-        </Grommet>
-      </Layout>
+        </Layout>
+      </Grommet>
     );
   }
 }

@@ -14,7 +14,9 @@ const Header = () => (
         textDecoration: 'none',
       }}
     >
-      <Heading level='3' margin='none'>Sonos API Demo</Heading>
+      <Heading level="2" margin="none">
+        Sonos API Demo
+      </Heading>
     </Link>
   </AppBar>
 );

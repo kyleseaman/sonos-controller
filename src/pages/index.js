@@ -1,25 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'gatsby';
-import { Grommet, Heading } from 'grommet';
+import { Link, navigate } from 'gatsby';
+import { Button, Grommet, Heading } from 'grommet';
 
 import Layout from '../components/layout';
-import SEO from '../components/seo';
 import { isLoggedIn } from '../utils/auth';
-
-const theme = {
-  global: {
-    font: {
-      family: 'Roboto',
-      size: '14px',
-      height: '20px',
-    },
-  },
-};
+import AppTheme from '../utils/theme';
 
 class IndexPage extends Component {
   state = {
     loggedIn: false,
-  }
+  };
 
   async componentDidMount() {
     try {
@@ -32,22 +22,31 @@ class IndexPage extends Component {
   }
 
   render() {
-    console.log('state', this.state);
     return (
-      <Layout>
-        <Grommet theme={theme}>
-          <div style={{marginTop: 50, textDecorationLine: 'none'}}>
-            <SEO title="Home" keywords={['gatsby', 'application', 'react']} />
-            {this.state.loggedIn ? 
+      <Grommet theme={AppTheme} themeMode="dark" full>
+        <Layout>
+          <div style={{ marginTop: 50, textDecorationLine: 'none' }}>
+            {this.state.loggedIn ? (
               <div>
-                <Link to="/sonos/"><Heading color='dark-2'>Sonos Control</Heading></Link><br/>
-                <Link to="/demo/"><Heading color='dark-2'>AudioClip Demo</Heading></Link><br/>
+                <Button
+                  onClick={() => navigate('/sonos/')}
+                  label="Sonos Control"
+                  size="large"
+                />
+                <Button
+                  onClick={() => navigate('/demo/')}
+                  label="AudioClip Demo"
+                  size="large"
+                />
               </div>
-              : <a href="/.netlify/functions/auth"><Heading color='dark-2'>Login</Heading></a>
-            }
+            ) : (
+              <a href="/.netlify/functions/auth">
+                <Heading color="dark-2">Login</Heading>
+              </a>
+            )}
           </div>
-        </Grommet>
-      </Layout>
+        </Layout>
+      </Grommet>
     );
   }
 }

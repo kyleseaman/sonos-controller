@@ -6,6 +6,7 @@ import { Grommet } from 'grommet';
 import { getUser } from '../utils/auth';
 import Layout from '../components/layout';
 import HouseHold from '../components/household';
+import AppTheme from '../utils/theme';
 
 const theme = {
   global: {
@@ -22,7 +23,7 @@ class SonosAPI extends Component {
     loading: false,
     error: null,
     households: [],
-  }
+  };
 
   componentDidMount() {
     this.getHouseHolds();
@@ -32,32 +33,36 @@ class SonosAPI extends Component {
     const sonosUser = getUser();
     this.setState({ loading: true });
     axios
-      .post('/.netlify/functions/sonos-households', { accessToken: sonosUser.token.access_token })
-      .then((res) => {
+      .post('/.netlify/functions/sonos-households', {
+        accessToken: sonosUser.token.access_token,
+      })
+      .then(res => {
         this.setState({
           loading: false,
           households: res.data.households,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         this.setState({
           error: err.message,
           loading: false,
         });
       });
-  }
+  };
 
   render() {
     return (
-      <Layout>
-        <Grommet theme={theme}>
-          <Link to="/">Go home</Link><br/>
+      <Grommet theme={AppTheme} themeMode="dark" full>
+        <Layout>
+          <br />
           {this.state.loading ? <div>Loading Household</div> : <div></div>}
           {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {this.state.households.map((hh, i) => <HouseHold key={i} householdId={hh.id}/>)}
-        </Grommet>
-      </Layout>
+          {this.state.households.map((hh, i) => (
+            <HouseHold key={i} householdId={hh.id} />
+          ))}
+        </Layout>
+      </Grommet>
     );
   }
 }
