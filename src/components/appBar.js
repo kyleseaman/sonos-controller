@@ -7,7 +7,7 @@ const AppBar = props => (
     direction="row"
     align="center"
     justify="between"
-    background="brand"
+    background="background-back"
     pad={{ left: 'medium', right: 'small', vertical: 'small' }}
     elevation="none"
     {...props}

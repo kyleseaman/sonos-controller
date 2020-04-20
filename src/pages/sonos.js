@@ -1,70 +1,50 @@
-import React, { Component } from 'react';
-import { Link } from 'gatsby';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Grommet } from 'grommet';
+import { Box } from 'grommet';
 
 import { getUser } from '../utils/auth';
 import Layout from '../components/layout';
 import HouseHold from '../components/household';
-import AppTheme from '../utils/theme';
 
-const theme = {
-  global: {
-    font: {
-      family: 'Roboto',
-      size: '14px',
-      height: '20px',
-    },
-  },
-};
+const SonosAPI = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [households, setHouseholds] = useState([]);
 
-class SonosAPI extends Component {
-  state = {
-    loading: false,
-    error: null,
-    households: [],
-  };
-
-  componentDidMount() {
-    this.getHouseHolds();
-  }
-
-  getHouseHolds = () => {
+  const getHouseHolds = () => {
     const sonosUser = getUser();
-    this.setState({ loading: true });
+    setLoading(true);
     axios
       .post('/.netlify/functions/sonos-households', {
         accessToken: sonosUser.token.access_token,
       })
       .then(res => {
-        this.setState({
-          loading: false,
-          households: res.data.households,
-        });
+        setLoading(false);
+        setHouseholds(res.data.households);
       })
       .catch(err => {
         console.log(err);
-        this.setState({
-          error: err.message,
-          loading: false,
-        });
+        setLoading(false);
+        setError(err.message);
       });
   };
 
-  render() {
-    return (
-      <Grommet theme={AppTheme} themeMode="dark" full>
-        <Layout>
-          <br />
-          {this.state.loading ? <div>Loading Household</div> : <div></div>}
-          {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-          {this.state.households.map((hh, i) => (
-            <HouseHold key={i} householdId={hh.id} />
-          ))}
-        </Layout>
-      </Grommet>
-    );
-  }
-}
+  useEffect(() => {
+    getHouseHolds();
+  }, []);
+
+  return (
+    <Layout>
+      <br />
+      <Box background="background-back">
+        {loading ? <div>Loading Household</div> : <div></div>}
+        {error ? <div>{error}</div> : <div></div>}
+        {households.map((hh, i) => (
+          <HouseHold key={i} householdId={hh.id} />
+        ))}
+      </Box>
+    </Layout>
+  );
+};
 
 export default SonosAPI;

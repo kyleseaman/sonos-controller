@@ -1,97 +1,95 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
-import { Box, Grommet, Heading } from 'grommet';
+import { Box, Heading } from 'grommet';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
-import { getUser } from '../utils/auth';
 import GroupControl from './groupControl';
 import GroupVolume from './groupVolume';
 import GroupMetadata from './groupMetadata';
 
-class PlayerGroup extends Component {
-  state = {
-    playbackStatus: {},
-    playbackMetadata: {},
-  }
+const PlayerGroup = ({
+  group,
+  select,
+  selected,
+  players,
+  updateMetadataForGroup,
+}) => {
+  const getPlayerNameForId = playerId => {
+    let name = '';
+    players.forEach(p => {
+      if (p.id === playerId) {
+        name = p.name;
+      }
+    });
+    return name;
+  };
 
-  // componentDidMount() {
-  // this.getPlaybackStatus();
-  // }
+  const handleMetadataUpdate = (groupId, updatedMetadata) => {
+    console.log('handle in playerGroup -- ', groupId);
+    updateMetadataForGroup(groupId, updatedMetadata);
+  };
 
-  getPlaybackStatus() {
-    const sonosUser = getUser();
-    const { id } = this.props.group;
-    axios
-      .post('/.netlify/functions/sonos-playbackStatus', {
-        accessToken: sonosUser.token.access_token,
-        groupId: id,
-        command: 'playback',
-      })
-      .then((res) => {
-        this.setState({
-          playbackStatus: res.data,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  render() {
-    const { group } = this.props;
-
-    return (
+  return (
+    <Box>
       <Droppable droppableId={group.id}>
         {provided => (
-          <div
-            ref={provided.innerRef}
-          >
-            <Grommet style={{ margin: 20 }}>
-              <Box
-                width='300px'
-                background='light-1'
-                elevation='small'
-                justify='center'
-                round='small'
-                pad='small'
-              >
-                <Heading size='small'>{group.name}</Heading>
-                <GroupMetadata groupId={group.id} />
-                <GroupVolume groupId={group.id} />
-                <GroupControl group={group} refreshPlaybackStatus={() => { this.getPlaybackStatus(); }} />
-                Players:
-                  {group.playerIds.map((playerId, i) => (
-                    <Draggable
-                      key={playerId}
-                      draggableId={playerId}
-                      index={i}
+          <div ref={provided.innerRef}>
+            <Box
+              width="300px"
+              margin="20px"
+              background={
+                selected ? 'background-front-selected' : 'background-front'
+              }
+              // elevation="small"
+              justify="center"
+              round="small"
+              pad="small"
+              onClick={() => {
+                select(group.id);
+              }}
+            >
+              <Heading size="small">{group.name}</Heading>
+              <GroupMetadata
+                groupId={group.id}
+                updateMetadataForGroup={handleMetadataUpdate}
+              />
+              {/* <GroupControl
+                group={props.group}
+                refreshPlaybackStatus={() => {
+                  getPlaybackStatus();
+                }}
+              />
+              <GroupVolume groupId={props.group.id} /> */}
+              Devices:
+              {group.playerIds.map((playerId, i) => (
+                <Draggable key={playerId} draggableId={playerId} index={i}>
+                  {draggableProvided => (
+                    <div
+                      ref={draggableProvided.innerRef}
+                      {...draggableProvided.draggableProps}
+                      {...draggableProvided.dragHandleProps}
                     >
-                      {draggableProvided => (
-                        <div
-                          ref={draggableProvided.innerRef}
-                          {...draggableProvided.draggableProps}
-                          {...draggableProvided.dragHandleProps}
-                        >
-                          {playerId}
-                        </div>
-                      )}
-                    </Draggable>
-
-                  ))}
-                  {provided.placeholder}
-                <br />
-              </Box>
-            </Grommet>
-        </div>)}
+                      {getPlayerNameForId(playerId)}
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              <br />
+            </Box>
+          </div>
+        )}
       </Droppable>
-    );
-  }
-}
+    </Box>
+  );
+};
 
 PlayerGroup.propTypes = {
   group: PropTypes.object,
   players: PropTypes.array,
+  select: PropTypes.func,
+  selected: PropTypes.bool,
+  updateMetadataForGroup: PropTypes.func,
 };
 
 export default PlayerGroup;

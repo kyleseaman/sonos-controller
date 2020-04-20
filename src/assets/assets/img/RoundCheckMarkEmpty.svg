@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>RoundCheckMarkEmpty</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Content" transform="translate(-526.000000, -449.000000)" fill="#FFFFFF">
+            <path d="M537,449 C543.075132,449 548,453.924868 548,460 C548,466.075132 543.075132,471 537,471 C530.924868,471 526,466.075132 526,460 C526,453.924868 530.924868,449 537,449 Z M537,451 C532.029437,451 528,455.029437 528,460 C528,464.970563 532.029437,469 537,469 C541.970563,469 546,464.970563 546,460 C546,455.029437 541.970563,451 537,451 Z" id="RoundCheckMarkEmpty"></path>
+        </g>
+    </g>
+</svg>

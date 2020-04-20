@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box, Heading, Text } from 'grommet';
+import { Box, Text } from 'grommet';
 
 import { getUser } from '../utils/auth';
 
@@ -9,13 +9,13 @@ class GroupMetadata extends Component {
   state = {
     playbackMetadata: {},
     testData: {},
-  }
+  };
 
   componentDidMount() {
     this.getPlaybackMetadataStatus();
   }
 
-  handleMetadata = (metadata) => {
+  handleMetadata = metadata => {
     // console.log(metadata);
     const updatedMetadata = {
       name: '',
@@ -40,7 +40,12 @@ class GroupMetadata extends Component {
       }
 
       if (Object.prototype.hasOwnProperty.call(metadata, 'currentItem')) {
-        if (Object.prototype.hasOwnProperty.call(metadata.currentItem.track, 'name')) {
+        if (
+          Object.prototype.hasOwnProperty.call(
+            metadata.currentItem.track,
+            'name',
+          )
+        ) {
           updatedMetadata.track = metadata.currentItem.track.name;
           updatedMetadata.album = metadata.currentItem.track.album.name;
           updatedMetadata.artist = metadata.currentItem.track.artist.name;
@@ -48,9 +53,13 @@ class GroupMetadata extends Component {
       }
     }
 
+    // this.props.updateMetadataForGroup(this.props.groupId, updatedMetadata);
+
     this.setState({
       playbackMetadata: updatedMetadata,
     });
+
+    this.props.updateMetadataForGroup(this.props.groupId, updatedMetadata);
   };
 
   getPlaybackMetadataStatus() {
@@ -62,14 +71,14 @@ class GroupMetadata extends Component {
         groupId,
         command: 'playbackMetadata',
       })
-      .then((res) => {
+      .then(res => {
         // console.log(res);
         this.setState({
           testData: res.data,
         });
         this.handleMetadata(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
@@ -77,12 +86,10 @@ class GroupMetadata extends Component {
   render() {
     const { playbackMetadata } = this.state;
     return (
-      <Box
-        wrap='true'
-      >
+      <Box>
         {/* <div>{JSON.stringify(this.state.testData)}</div> */}
-        <Text weight='bold'>{playbackMetadata.name}</Text>
-        <Text wordBreak='break-word'>{playbackMetadata.track}</Text>
+        <Text weight="bold">{playbackMetadata.name}</Text>
+        <Text wordBreak="break-word">{playbackMetadata.track}</Text>
         <Text>{playbackMetadata.artist}</Text>
         <Text>{playbackMetadata.service}</Text>
         <Text>{playbackMetadata.album}</Text>
@@ -93,6 +100,7 @@ class GroupMetadata extends Component {
 
 GroupMetadata.propTypes = {
   groupId: PropTypes.string,
+  updateMetadataForGroup: PropTypes.func,
 };
 
 export default GroupMetadata;

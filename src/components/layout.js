@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { Box } from 'grommet';
 
+import AppTheme from '../utils/theme';
 import Header from './header';
 // import './layout.css';
 

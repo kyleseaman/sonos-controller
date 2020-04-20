@@ -1,39 +1,104 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box, Grommet } from 'grommet';
+import { Box } from 'grommet';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import { getUser } from '../utils/auth';
 import PlayerGroup from './playerGroup';
+import PlaybackBar from './playbackBar';
 
-class HouseHold extends Component {
-  state = {
-    loading: false,
-    error: null,
-    players: [],
-    groups: [],
-  }
+const HouseHold = props => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [players, setPlayers] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [metadataForGroup, setMetadataForGroup] = useState({});
 
-  componentDidMount() {
-    this.getGroups();
-  }
+  useEffect(() => {
+    getGroups();
+    find();
+  }, []);
 
-  onDragEnd = (result) => {
+  const modifyPlayerGroup = (groupId, playerIdsToAdd, playerIdsToRemove) => {
+    const sonosUser = getUser();
+    axios
+      .post('/.netlify/functions/sonos-modifyGroupMembers', {
+        accessToken: sonosUser.token.access_token,
+        groupId,
+        playerIdsToAdd,
+        playerIdsToRemove,
+      })
+      .then(res => {
+        console.log(res);
+        getGroups();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const find = () => {
+    const { householdId } = props;
+    const sonosUser = getUser();
+    axios
+      .post('/.netlify/functions/find', {
+        accessToken: sonosUser.token.access_token,
+        householdId,
+      })
+      .then(res => {
+        const services = res.data;
+        console.log('SERVICES', services);
+      })
+      .catch(err => {
+        setError(err);
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const selectGroup = groupId => {
+    setSelectedGroup(groupId);
+  };
+
+  const updateMetadataForGroup = (groupId, metadata) => {
+    setMetadataForGroup({ ...metadataForGroup, [groupId]: metadata });
+  };
+
+  const getGroups = () => {
+    const { householdId } = props;
+    const sonosUser = getUser();
+    setLoading(true);
+    axios
+      .post('/.netlify/functions/sonos-groups', {
+        accessToken: sonosUser.token.access_token,
+        householdId,
+      })
+      .then(res => {
+        console.log('RES for groups', res);
+        setLoading(false);
+        setPlayers(res.data.players);
+        setGroups(res.data.groups);
+      })
+      .catch(err => {
+        setError(err);
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const onDragEnd = result => {
     const { source, destination, draggableId } = result;
 
     if (!destination) {
       // we can use this to break up a group
       // check to see if player is grouped first
-      this.state.groups.forEach((group) => {
+      groups.forEach(group => {
         if (group.id === source.droppableId) {
           const { playerIds } = group;
           if (playerIds.length > 1 && playerIds.includes(draggableId)) {
-            this.modifyPlayerGroup(
-              source.droppableId,
-              [],
-              [draggableId],
-            );
+            modifyPlayerGroup(source.droppableId, [], [draggableId]);
           }
         }
       });
@@ -45,75 +110,34 @@ class HouseHold extends Component {
     } else {
       console.log(`MOVING TO THE NEW LIST! ${result.draggableId}`);
       // this assumes one player at a time
-      this.modifyPlayerGroup(
-        destination.droppableId,
-        [draggableId],
-        [],
-      );
+      modifyPlayerGroup(destination.droppableId, [draggableId], []);
     }
-  }
+  };
 
-  modifyPlayerGroup(groupId, playerIdsToAdd, playerIdsToRemove) {
-    const sonosUser = getUser();
-    axios
-      .post('/.netlify/functions/sonos-modifyGroupMembers', {
-        accessToken: sonosUser.token.access_token,
-        groupId,
-        playerIdsToAdd,
-        playerIdsToRemove,
-      })
-      .then((res) => {
-        console.log(res);
-        this.getGroups();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  console.log('selected meta', metadataForGroup[selectedGroup]);
 
-  getGroups = () => {
-    const { householdId } = this.props;
-    const sonosUser = getUser();
-    this.setState({ loading: true });
-    axios
-      .post('/.netlify/functions/sonos-groups', { accessToken: sonosUser.token.access_token, householdId })
-      .then((res) => {
-        this.setState({
-          loading: false,
-          players: res.data.players,
-          groups: res.data.groups,
-        });
-      })
-      .catch((err) => {
-        console.log('ERROR HERE????');
-        this.setState({
-          error: err,
-          loading: false,
-        });
-        console.log(err);
-      });
-  }
-
-  render() {
-    const { householdId } = this.props;
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Grommet>
-          <div>{householdId}</div>
-          <Box
-            direction='row'
-            wrap='true'
-          >
-            {this.state.error ? <div>{this.state.error}</div> : <div></div>}
-            {
-              this.state.groups.map((group, i) => <PlayerGroup key={i} group={group} />)
-            }
-          </Box>
-        </Grommet>
-      </DragDropContext>
-    );
-  }
-}
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div>{props.householdId}</div>
+      <Box direction="column">
+        {error ? <div>{error}</div> : <div></div>}
+        {groups.map((group, i) => (
+          <PlayerGroup
+            key={i}
+            group={group}
+            players={players}
+            select={selectGroup}
+            selected={group.id === selectedGroup}
+            updateMetadataForGroup={updateMetadataForGroup}
+          />
+        ))}
+        {selectedGroup ?? (
+          <PlaybackBar metadata={metadataForGroup[selectedGroup]} />
+        )}
+      </Box>
+    </DragDropContext>
+  );
+};
 
 HouseHold.propTypes = {
   householdId: PropTypes.string,

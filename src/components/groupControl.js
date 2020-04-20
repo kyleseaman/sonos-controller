@@ -2,13 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Box, Button } from 'grommet';
-import {
-  Pause,
-  FastForward,
-  Rewind,
-  Play,
-} from 'grommet-icons';
-
+import { Play, Pause, SkipBack, SkipForward } from '../assets/assets/icons';
 import { getUser } from '../utils/auth';
 
 class GroupControl extends Component {
@@ -16,7 +10,9 @@ class GroupControl extends Component {
     super(props);
     const { group } = props;
     this.state = {
-      paused: group.playbackState === 'PLAYBACK_STATE_PAUSED' || group.playbackState === 'PLAYBACK_STATE_IDLE',
+      paused:
+        group.playbackState === 'PLAYBACK_STATE_PAUSED' ||
+        group.playbackState === 'PLAYBACK_STATE_IDLE',
     };
   }
 
@@ -39,7 +35,7 @@ class GroupControl extends Component {
           }));
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
@@ -47,31 +43,62 @@ class GroupControl extends Component {
   render() {
     return (
       <div>
-        <Button
-            size='medium'
-            label='Play Chill Hits'
+        {/* <Button
+          size="medium"
+          label="Play Chill Hits"
+          onClick={() => {
+            this.handlePlayback('loadContainer', {
+              containerId: {
+                objectId:
+                  'spotify:user:spotify:playlist:37i9dQZF1DX4WYpdgoIcn6',
+                serviceId: '12',
+              },
+              containerMetadata: {
+                name: 'Chill Hits',
+                type: 'playlist',
+                id: {
+                  objectId: 'playlist:37i9dQZF1DX4WYpdgoIcn6',
+                  serviceId: '12',
+                },
+              },
+              playOnCompletion: false,
+            });
+          }}
+        /> */}
+        <Box
+          direction="row"
+          gap="medium"
+          align="center"
+          justify="center"
+          margin="small"
+        >
+          <SkipBack
+            size="medium"
             onClick={() => {
-              this.handlePlayback('loadContainer',
-                {
-                  containerId: { objectId: 'spotify:user:spotify:playlist:37i9dQZF1DX4WYpdgoIcn6', serviceId: '12' },
-                  containerMetadata: { name: 'Chill Hits', type: 'playlist', id: { objectId: 'playlist:37i9dQZF1DX4WYpdgoIcn6', serviceId: '12' } },
-                  playOnCompletion: false,
-                });
+              this.handlePlayback('skipToPreviousTrack');
             }}
           />
-        <Box
-          alignSelf='center'
-          direction='row'
-          gap='medium'
-          justify='center'
-          margin='small'
-        >
-          <Rewind size='large' onClick={() => { this.handlePlayback('skipToPreviousTrack'); }} />
-          {this.state.paused
-            ? <Play size='large' onClick={() => { this.handlePlayback('play'); }} />
-            : <Pause size='large' onClick={() => { this.handlePlayback('pause'); }}/>
-          }
-          <FastForward size='large' onClick={() => { this.handlePlayback('skipToNextTrack'); }} />
+          {this.state.paused ? (
+            <Play
+              size="large"
+              onClick={() => {
+                this.handlePlayback('play');
+              }}
+            />
+          ) : (
+            <Pause
+              size="large"
+              onClick={() => {
+                this.handlePlayback('pause');
+              }}
+            />
+          )}
+          <SkipForward
+            size="medium"
+            onClick={() => {
+              this.handlePlayback('skipToNextTrack');
+            }}
+          />
         </Box>
       </div>
     );

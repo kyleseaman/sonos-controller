@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>skipBack</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Content" transform="translate(-4.000000, -216.000000)" fill="#FFFFFF">
+            <path d="M6.25,216 C6.664,216 7,216.336 7,216.75 L7,216.75 L7,239.25 C7,239.664 6.664,240 6.25,240 L6.25,240 L4.75,240 C4.336,240 4,239.664 4,239.25 L4,239.25 L4,216.75 C4,216.336 4.336,216 4.75,216 L4.75,216 Z M28,216.786126 L28,239.213218 C28,239.816234 27.355,240.194245 26.836,239.895738 L7.393,228.681441 C7.1305,228.531437 7,228.26593 7,228.000422 C7,227.734917 7.1305,227.469409 7.393,227.317905 L26.836,216.105109 C27.355,215.8051 28,216.18311 28,216.786126 Z" id="skipBack"></path>
+        </g>
+    </g>
+</svg>

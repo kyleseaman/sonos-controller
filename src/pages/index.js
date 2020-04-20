@@ -5,6 +5,7 @@ import { Button, Grommet, Heading } from 'grommet';
 import Layout from '../components/layout';
 import { isLoggedIn } from '../utils/auth';
 import AppTheme from '../utils/theme';
+import SonosAPI from './sonos';
 
 class IndexPage extends Component {
   state = {
@@ -24,28 +25,13 @@ class IndexPage extends Component {
   render() {
     return (
       <Grommet theme={AppTheme} themeMode="dark" full>
-        <Layout>
-          <div style={{ marginTop: 50, textDecorationLine: 'none' }}>
-            {this.state.loggedIn ? (
-              <div>
-                <Button
-                  onClick={() => navigate('/sonos/')}
-                  label="Sonos Control"
-                  size="large"
-                />
-                <Button
-                  onClick={() => navigate('/demo/')}
-                  label="AudioClip Demo"
-                  size="large"
-                />
-              </div>
-            ) : (
-              <a href="/.netlify/functions/auth">
-                <Heading color="dark-2">Login</Heading>
-              </a>
-            )}
-          </div>
-        </Layout>
+        {this.state.loggedIn ? (
+          <SonosAPI />
+        ) : (
+          <a href="/.netlify/functions/auth">
+            <Heading color="dark-2">Login</Heading>
+          </a>
+        )}
       </Grommet>
     );
   }

@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box } from 'grommet';
-import {
-  AddCircle,
-  SubtractCircle,
-  VolumeMute,
-  Volume,
-} from 'grommet-icons';
+import { Box, Text } from 'grommet';
+import { AddCircle, SubtractCircle } from 'grommet-icons';
+
+import { Mute, Volume } from '../assets/assets/icons';
 
 import { getUser } from '../utils/auth';
 
@@ -16,7 +13,7 @@ class GroupVolume extends Component {
     volume: null,
     muted: null,
     fixed: null,
-  }
+  };
 
   componentDidMount() {
     this.getPlaybackMetadataStatus();
@@ -36,7 +33,7 @@ class GroupVolume extends Component {
       .then(() => {
         this.getPlaybackMetadataStatus();
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
@@ -50,14 +47,14 @@ class GroupVolume extends Component {
         groupId,
         command: 'groupVolume',
       })
-      .then((res) => {
+      .then(res => {
         this.setState({
           volume: res.data.volume,
           muted: res.data.muted,
           fixed: res.data.fixed,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   }
@@ -65,37 +62,51 @@ class GroupVolume extends Component {
   render() {
     return (
       <div>
-        <div>{`Volume: ${this.state.volume}`}</div>
-        <Box
-          alignSelf='center'
-          direction='row'
-          gap='medium'
-          justify='center'
-          margin='small'
-        >
-          <SubtractCircle size='large' onClick={() => {
-            this.adjustVolume('relative', {
-              volumeDelta: -5,
-            });
-          }} />
-          {
-            this.state.muted
-              ? <Volume size='large' onClick={() => {
-                this.adjustVolume('mute', {
-                  muted: !this.state.muted,
+        <Box direction="column" align="center" justify="center">
+          <Text>{`Volume: ${this.state.volume}`}</Text>
+          <Box
+            alignSelf="center"
+            direction="row"
+            gap="medium"
+            justify="center"
+            margin="small"
+          >
+            <SubtractCircle
+              size="medium"
+              onClick={() => {
+                this.adjustVolume('relative', {
+                  volumeDelta: -5,
                 });
-              }} />
-              : <VolumeMute size='large' onClick={() => {
-                this.adjustVolume('mute', {
-                  muted: !this.state.muted,
+              }}
+            />
+            {this.state.muted ? (
+              <Mute
+                size="medium"
+                onClick={() => {
+                  this.adjustVolume('mute', {
+                    muted: !this.state.muted,
+                  });
+                }}
+              />
+            ) : (
+              <Volume
+                size="medium"
+                onClick={() => {
+                  this.adjustVolume('mute', {
+                    muted: !this.state.muted,
+                  });
+                }}
+              />
+            )}
+            <AddCircle
+              size="medium"
+              onClick={() => {
+                this.adjustVolume('relative', {
+                  volumeDelta: 5,
                 });
-              }} />
-          }
-          <AddCircle size='large' onClick={() => {
-            this.adjustVolume('relative', {
-              volumeDelta: 5,
-            });
-          }} />
+              }}
+            />
+          </Box>
         </Box>
       </div>
     );

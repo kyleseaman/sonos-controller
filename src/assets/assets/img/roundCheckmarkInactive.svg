@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>RoundCheckmark</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M20,10 C20,15.522847 15.522847,20 10,20 C4.477152,20 0,15.522847 0,10 C0,4.477152 4.477152,0 10,0 C15.522847,0 20,4.477152 20,10 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Content" transform="translate(-490.000000, -414.000000)">
+            <g id="RoundCheckmark" transform="translate(490.000000, 414.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Clip-2"></g>
+                <path d="M18,10 C18,14.418278 14.418278,18 10,18 L10,22 C16.627417,22 22,16.627417 22,10 L18,10 Z M10,18 C5.581722,18 2,14.418278 2,10 L-2,10 C-2,16.627417 3.372583,22 10,22 L10,18 Z M2,10 C2,5.581722 5.581722,2 10,2 L10,-2 C3.372583,-2 -2,3.372583 -2,10 L2,10 Z M10,2 C14.418278,2 18,5.581722 18,10 L22,10 C22,3.372583 16.627417,-2 10,-2 L10,2 Z" id="Fill-1" fill="#FFFFFF" mask="url(#mask-2)"></path>
+            </g>
+        </g>
+    </g>
+</svg>

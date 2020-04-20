@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="3px" viewBox="0 0 18 3" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59.1 (86144) - https://sketch.com -->
+    <title>more</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Content" transform="translate(-481.000000, -228.000000)" fill="#FFFFFF">
+            <g id="more" transform="translate(481.000000, 228.000000)">
+                <path d="M3,1.5 C3,0.67125 2.32875,0 1.5,0 C0.67125,0 0,0.67125 0,1.5 C0,2.32875 0.67125,3 1.5,3 C2.32875,3 3,2.32875 3,1.5 Z" id="Fill-1"></path>
+                <path d="M9,0 C8.171249,0 7.5,0.67125 7.5,1.5 C7.5,2.32875 8.171249,3 9,3 C9.82875,3 10.5,2.32875 10.5,1.5 C10.5,0.67125 9.82875,0 9,0 Z" id="Fill-2"></path>
+                <path d="M15,1.5 C15,0.67125 15.671249,0 16.5,0 C17.328751,0 18,0.67125 18,1.5 C18,2.32875 17.328751,3 16.5,3 C15.671249,3 15,2.32875 15,1.5 Z" id="Fill-3"></path>
+            </g>
+        </g>
+    </g>
+</svg>
