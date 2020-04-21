@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box, Heading } from 'grommet';
+import { Box, Heading, Text } from 'grommet';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { getUser } from '../utils/auth';
@@ -50,18 +50,13 @@ const PlayerGroup = ({
                 select(group.id);
               }}
             >
-              <Heading size="small">{group.name}</Heading>
+              <Text size="large" weight="bold">
+                    {group ? group.name : ''}
+                </Text>
               <GroupMetadata
                 groupId={group.id}
                 updateMetadataForGroup={handleMetadataUpdate}
               />
-              {/* <GroupControl
-                group={props.group}
-                refreshPlaybackStatus={() => {
-                  getPlaybackStatus();
-                }}
-              />
-              <GroupVolume groupId={props.group.id} /> */}
               Devices:
               {group.playerIds.map((playerId, i) => (
                 <Draggable key={playerId} draggableId={playerId} index={i}>

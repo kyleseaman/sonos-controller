@@ -57,8 +57,6 @@ class GroupMetadata extends Component {
       }
     }
 
-    // this.props.updateMetadataForGroup(this.props.groupId, updatedMetadata);
-
     this.setState({
       playbackMetadata: updatedMetadata,
     });
@@ -91,12 +89,12 @@ class GroupMetadata extends Component {
     const { playbackMetadata } = this.state;
     return (
       <Box>
-        {/* <div>{JSON.stringify(this.state.testData)}</div> */}
         <Text weight="bold">{playbackMetadata.name}</Text>
-        <Text wordBreak="break-word">{playbackMetadata.track}</Text>
-        <Text>{playbackMetadata.artist}</Text>
-        <Text>{playbackMetadata.service}</Text>
-        <Text>{playbackMetadata.album}</Text>
+        {/* <Text>{playbackMetadata.track}</Text>
+        <Text>{playbackMetadata.artist}</Text> */}
+        <Text>{`${playbackMetadata.artist}, ${playbackMetadata.track}`}</Text>
+        {/* <Text>{playbackMetadata.service}</Text> */}
+        {/* <Text>{playbackMetadata.album}</Text> */}
       </Box>
     );
   }

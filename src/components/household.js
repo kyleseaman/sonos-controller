@@ -123,7 +123,7 @@ const HouseHold = props => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Box>
       <Grid
-        fill
+        
         rows={['auto', 'flex']}
         columns={['medium', 'flex']}
         areas={[
@@ -146,7 +146,7 @@ const HouseHold = props => {
           />
         ))}
       </Box>
-      <Box gridArea='nowPlaying'>
+      <Box gridArea='nowplaying' align='start'>
       {(selectedGroupId && (
           <NowPlaying metadata={metadataForGroup[selectedGroupId]} group={groupForId(selectedGroupId)} />
         ))}
