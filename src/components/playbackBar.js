@@ -1,32 +1,45 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios'
 import { Box, RangeInput, Text, ThemeContext } from 'grommet';
 
+import { getUser } from '../utils/auth'
 import * as Icons from '../assets/assets/icons';
-//{ Group, Mute, Volume, Queue }
-// import PlaybackControl from './PlaybackControl';
-// import { formatAlbumArtImageUrl } from '../../helpers';
+import { formatAlbumArtImageUrl } from '../utils/helper';
 
-// interface NowPlayingProps {
-//     selectedGroup: Group;
-//     nowPlaying?: {
-//         metadata?: Types.FormattedMetadata;
-//         playback?: Types.FormattedPlayback;
-//     };
-// }
+import GroupControl from './groupControl';
 
-const PlaybackBar = props => {
-  //   const { selectedGroup, nowPlaying } = props;
-  //   const { metadata, playback } = {};
-  const metadata = {};
-  const [muted, setMuted] = React.useState();
-  const [volume, setVolume] = React.useState(5);
+const PlaybackBar = ({ groupId, group, metadata }) => {
+  const [playbackState, setPlaybackState] = useState(null)
+  const [muted, setMuted] = useState();
+  const [volume, setVolume] = useState(5);
   // const [progress, setProgress] = useState(5);
 
+  useEffect(() => {
+    getPlaybackStatus()
+  }, [])
+
+  const getPlaybackStatus = () => {
+    const sonosUser = getUser();
+    axios
+      .post('/.netlify/functions/sonos-playbackStatus', {
+        accessToken: sonosUser.token.access_token,
+        groupId,
+        command: 'playback',
+      })
+      .then((res) => {
+        console.log('PLAYBACK STATUS ****', res.data)
+        setPlaybackState(res.data)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   const adjustVolume = volumeValue => {};
-
-  console.log('METADATA >>>>> ', props.metadata);
-
   const toggleMute = () => {};
+  
+  console.log('METADATA >>>>> ', metadata);
 
   return (
     <div>
@@ -34,14 +47,14 @@ const PlaybackBar = props => {
         <Box
           direction="row"
           height="110px"
-          fill="horizontal"
+          margin='20px'
           justify="between"
           round="small"
           gap="small"
           elevation="small"
           background="playback-bar"
           pad={{ left: '35px', right: '25px', vertical: 'small' }}
-          {...props}
+          // {...props}
         >
           <Box align="center" justify="between" alignSelf="center">
             <Box
@@ -50,11 +63,11 @@ const PlaybackBar = props => {
               justify="between"
               width={{ min: '150px', max: '190px' }}
             >
-              <Box
+              {metadata.imageUrl && <Box
                 width="70px"
                 height="70px"
-                // background={formatAlbumArtImageUrl(metadata)}
-              />
+                background={formatAlbumArtImageUrl(metadata)}
+              />}
               <Box
                 direction="column"
                 margin={{ left: '10px' }}
@@ -62,9 +75,9 @@ const PlaybackBar = props => {
                 height={{ min: '70px', max: '70px' }}
               >
                 <Text weight="bold" truncate size="small">
-                  {/* {metadata.track} */}
+                  {metadata.track}
                 </Text>
-                {/* <Text size="small">{metadata.artist}</Text> */}
+                <Text size="small">{metadata.artist}</Text>
               </Box>
             </Box>
           </Box>
@@ -76,12 +89,18 @@ const PlaybackBar = props => {
                 slim={true}
               />
             )} */}
+            <GroupControl
+                group={group}
+                // refreshPlaybackStatus={() => {
+                //   getPlaybackStatus();
+                // }}
+              />
             <Box width="medium">
               <Box justify="between" direction="row" fill="horizontal">
-                {/* <Text size="small">
-                  {playback ? playback.formattedPositionMillis : ''}
+                <Text size="small">
+                  {playbackState ? playbackState.positionMillis : ''}
                 </Text>
-                <Text size="small">{metadata.formattedDuration}</Text> */}
+                <Text size="small">{metadata.durationMillis}</Text>
               </Box>
               <ThemeContext.Extend
                 value={{
@@ -103,15 +122,14 @@ const PlaybackBar = props => {
                   },
                 }}
               >
-                {/* {playback && (
+                {playbackState && (
                   <RangeInput
-                    // value={playback.positionMillis}
+                    value={playbackState.positionMillis}
                     height="5px"
-                    // onChange={onProgressChange}
-                    // max={metadata.duration}
+                    max={metadata.durationMillis}
                     min={0}
                   />
-                )} */}
+                )}
               </ThemeContext.Extend>
             </Box>
           </Box>
@@ -191,6 +209,12 @@ const PlaybackBar = props => {
       )}
     </div>
   );
+};
+
+PlaybackBar.propTypes = {
+  metadata: PropTypes.object,
+  groupId: PropTypes.string,
+  group: PropTypes.object,
 };
 
 export default PlaybackBar;

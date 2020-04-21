@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Box } from 'grommet';
+import { Box, Grid } from 'grommet';
 import { DragDropContext } from 'react-beautiful-dnd';
 
 import { getUser } from '../utils/auth';
 import PlayerGroup from './playerGroup';
 import PlaybackBar from './playbackBar';
+import NowPlaying from './nowPlaying';
 
 const HouseHold = props => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [players, setPlayers] = useState([]);
   const [groups, setGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [metadataForGroup, setMetadataForGroup] = useState({});
 
   useEffect(() => {
@@ -59,8 +60,12 @@ const HouseHold = props => {
   };
 
   const selectGroup = groupId => {
-    setSelectedGroup(groupId);
+    setSelectedGroupId(groupId);
   };
+
+  const groupForId = groupId => {
+    return groups.find(g => g.id === groupId)
+  }
 
   const updateMetadataForGroup = (groupId, metadata) => {
     setMetadataForGroup({ ...metadataForGroup, [groupId]: metadata });
@@ -114,12 +119,21 @@ const HouseHold = props => {
     }
   };
 
-  console.log('selected meta', metadataForGroup[selectedGroup]);
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>{props.householdId}</div>
-      <Box direction="column">
+      <Box>
+      <Grid
+        fill
+        rows={['auto', 'flex']}
+        columns={['medium', 'flex']}
+        areas={[
+            { name: 'header', start: [0, 0], end: [1, 0] },
+            { name: 'groups', start: [0, 1], end: [0, 1] },
+            { name: 'nowplaying', start: [1, 1], end: [1, 1] },
+        ]}
+      >
+      <Box gridArea='header'>{props.householdId}</Box>
+      <Box gridArea='groups' direction="column" fill='horizontal'>
         {error ? <div>{error}</div> : <div></div>}
         {groups.map((group, i) => (
           <PlayerGroup
@@ -127,12 +141,19 @@ const HouseHold = props => {
             group={group}
             players={players}
             select={selectGroup}
-            selected={group.id === selectedGroup}
+            selected={group.id === selectedGroupId}
             updateMetadataForGroup={updateMetadataForGroup}
           />
         ))}
-        {selectedGroup ?? (
-          <PlaybackBar metadata={metadataForGroup[selectedGroup]} />
+      </Box>
+      <Box gridArea='nowPlaying'>
+      {(selectedGroupId && (
+          <NowPlaying metadata={metadataForGroup[selectedGroupId]} group={groupForId(selectedGroupId)} />
+        ))}
+      </Box>
+      </Grid>
+      {selectedGroupId && (
+          <PlaybackBar group={groupForId(selectedGroupId)} groupId={selectedGroupId} metadata={metadataForGroup[selectedGroupId]} />
         )}
       </Box>
     </DragDropContext>

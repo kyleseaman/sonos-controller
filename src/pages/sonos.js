@@ -34,8 +34,8 @@ const SonosAPI = () => {
   }, []);
 
   return (
-    <Layout>
-      <br />
+    // <Layout>
+      // <br />
       <Box background="background-back">
         {loading ? <div>Loading Household</div> : <div></div>}
         {error ? <div>{error}</div> : <div></div>}
@@ -43,7 +43,7 @@ const SonosAPI = () => {
           <HouseHold key={i} householdId={hh.id} />
         ))}
       </Box>
-    </Layout>
+    // </Layout>
   );
 };
 

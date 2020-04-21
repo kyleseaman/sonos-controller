@@ -16,18 +16,21 @@ class GroupMetadata extends Component {
   }
 
   handleMetadata = metadata => {
-    // console.log(metadata);
+    console.log('group metadata -- ', metadata);
     const updatedMetadata = {
       name: '',
       track: '',
       artist: '',
       service: '',
       album: '',
+      durationMillis: '',
+      container: {},
     };
 
     if (metadata) {
       const { container } = metadata;
       if (Object.prototype.hasOwnProperty.call(container, 'name')) {
+        updatedMetadata.imageUrl = container.imageUrl ? container.imageUrl : null;
         updatedMetadata.name = container.name;
       }
 
@@ -49,6 +52,7 @@ class GroupMetadata extends Component {
           updatedMetadata.track = metadata.currentItem.track.name;
           updatedMetadata.album = metadata.currentItem.track.album.name;
           updatedMetadata.artist = metadata.currentItem.track.artist.name;
+          updatedMetadata.durationMillis = metadata.currentItem.track.durationMillis;
         }
       }
     }
